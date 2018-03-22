@@ -4,8 +4,13 @@
   "description": "Boilerplate for NestJS webapps",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+	"start": "node index.js",
+	"prestart": "npm run build",
+    "build": "tsc index.ts"
   },
   "author": "m1cr0man",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^2.7.2"
+  }
 }
