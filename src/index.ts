@@ -1,10 +1,10 @@
-interface Numbers {
-	a: number,
-	b: number
+import { NestFactory } from '@nestjs/core'
+import { M1cr0blogModule } from './modules/m1cr0blog/module'
+
+async function bootstrap(): Promise<void> {
+	const app = await NestFactory.create(M1cr0blogModule)
+
+	await app.listen(3000)
 }
 
-function add(vals: Numbers): number {
-	return vals.a + vals.b
-}
-
-console.log("4 + 5 is ", add({a: 4, b: 5}))
+bootstrap()
