@@ -13,9 +13,12 @@
   "dependencies": {
     "@nestjs/common": "^4.6.6",
     "@nestjs/core": "^4.6.6",
+    "@nestjs/typeorm": "^2.0.0",
     "@types/node": "^9.6.0",
+    "mysql": "^2.15.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^5.5.7",
+    "typeorm": "^0.1.16",
     "typescript": "^2.7.2"
   }
 }
