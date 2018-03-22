@@ -2,11 +2,11 @@
   "name": "nest-starter",
   "version": "1.0.0",
   "description": "Boilerplate for NestJS webapps",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-	"start": "node index.js",
+	"start": "node dist/index.js",
 	"prestart": "npm run build",
-    "build": "tsc index.ts"
+    "build": "tsc"
   },
   "author": "m1cr0man",
   "license": "ISC",

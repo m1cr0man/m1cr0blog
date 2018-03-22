@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"outFile": "dist/index.js"
+	},
+	"include": [
+		"src/**/*.ts"
+	]
+}
