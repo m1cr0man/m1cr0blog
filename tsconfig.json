@@ -1,7 +1,12 @@
 {
 	"compilerOptions": {
 		"strict": true,
-		"outFile": "dist/index.js"
+		"outDir": "dist",
+		"sourceMap": true,
+		"removeComments": true,
+		"noUnusedLocals": true,
+		"noImplicitReturns": true,
+		"forceConsistentCasingInFileNames": true
 	},
 	"include": [
 		"src/**/*.ts"
