@@ -1,3 +1,9 @@
 node_modules/
 dist/
 hidden/
+
+# Sublime Text
+*.sublime-*
+
+# VS Code
+*.code-*
