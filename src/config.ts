@@ -1,6 +1,10 @@
 import { env } from 'process'
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions'
 
+export const appRoot = __dirname
+
+export const uploadRoot = appRoot + '/uploads'
+
 export const dbConfig: MysqlConnectionOptions = {
     type: 'mysql',
     host: env.DB_HOST || '127.0.0.1',
