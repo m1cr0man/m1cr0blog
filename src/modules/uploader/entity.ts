@@ -1,7 +1,11 @@
-import { existsSync, mkdirSync, renameSync, unlinkSync } from 'fs'
-import { Entity, Column, PrimaryGeneratedColumn, BeforeRemove } from 'typeorm'
+import { existsSync, mkdir, rename, unlinkSync } from 'fs'
+import { BeforeRemove, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 import * as moment from 'moment'
 import { uploadRoot } from '../../config'
+import { promisify } from 'util'
+
+const mkdirPromise = promisify(mkdir)
+const renamePromise = promisify(rename)
 
 @Entity()
 export class Upload {
@@ -36,12 +40,13 @@ export class Upload {
     }
 
     get path(): string {
-        return `${this.dirname}/${this.id}`
+    	const fileName = `${this.date.getMilliseconds()}.${this.filename}`
+        return `${this.dirname}/${fileName}`
     }
 
-    set file(raw_file: Express.Multer.File) {
-        if (!existsSync(this.dirname)) mkdirSync(this.dirname)
-        renameSync(raw_file.path, this.path)
+    async addFile(raw_file: Express.Multer.File) {
+        if (!existsSync(this.dirname)) await mkdirPromise(this.dirname)
+        await renamePromise(raw_file.path, this.path)
     }
 
     exists(): boolean {

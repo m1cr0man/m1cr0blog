@@ -28,11 +28,9 @@ export class UploadService {
 			date: new Date()
         })
 
-        // Save before adding the file, so that date and ID are set
-        await this.repo.save(upload)
-        upload.file = file
+		await upload.addFile(file)
 
-        return upload
+        return this.repo.save(upload)
     }
 
     async delete(id: number): Promise<void> {
