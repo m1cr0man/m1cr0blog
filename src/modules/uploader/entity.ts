@@ -31,7 +31,10 @@ export class Upload {
 
     @BeforeRemove()
     removeFile(): void {
-        if (this.exists()) unlinkSync(this.path)
+        // Check that file exists before deleting, to guarantee
+        // that deleting an upload is always idempotent
+        const path = this.path
+        if (existsSync(path)) unlinkSync(this.path)
     }
 
     get dirname(): string {
@@ -49,7 +52,4 @@ export class Upload {
         await renamePromise(raw_file.path, this.path)
     }
 
-    exists(): boolean {
-        return existsSync(this.path)
-    }
 }

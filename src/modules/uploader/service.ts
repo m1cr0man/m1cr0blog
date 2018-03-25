@@ -16,7 +16,7 @@ export class UploadService {
 
     async findOne(id: number): Promise<Upload> {
         const upload = await this.repo.findOne(id)
-        if (!upload || !upload.exists()) throw new HttpException('File not found', 404)
+        if (!upload) throw new HttpException('File not found', 404)
         return upload
     }
 
