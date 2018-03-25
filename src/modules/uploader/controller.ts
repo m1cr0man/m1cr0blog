@@ -1,5 +1,8 @@
 import { Response } from 'express'
-import { HttpException, Get, Post, Res, Controller, Inject, HttpCode, UploadedFile, FileInterceptor, Param, UseInterceptors } from '@nestjs/common'
+import {
+	HttpException, Get, Post, Res, Controller, Inject, HttpCode, UploadedFile, FileInterceptor, Param,
+	UseInterceptors, Delete,
+} from '@nestjs/common'
 import { UploadService } from './service'
 import { Upload } from './entity'
 import { uploadRoot } from '../../config'
@@ -31,6 +34,14 @@ export class UploadController {
         @Param() id: number,
     ): Promise<Upload> {
         return this.service.findOne(id)
+    }
+
+    @Delete('upload/:id')
+    @HttpCode(204)
+    delete(
+        @Param() id: number,
+    ): Promise<void> {
+        return this.service.delete(id)
     }
 
     @Get('upload/:id/download')

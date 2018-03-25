@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, renameSync } from 'fs'
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm'
+import { existsSync, mkdirSync, renameSync, unlinkSync } from 'fs'
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, BeforeRemove } from 'typeorm'
 import * as moment from 'moment'
 import { uploadRoot } from '../../config'
 
@@ -24,6 +24,11 @@ export class Upload {
     @CreateDateColumn()
     // @ts-ignore
     readonly date: Date
+
+    @BeforeRemove()
+    removeFile(): void {
+        if (this.exists()) unlinkSync(this.path)
+    }
 
     get dirname(): string {
         const folderName = moment(this.date).format('GGMMDD')

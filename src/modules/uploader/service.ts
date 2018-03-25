@@ -33,4 +33,9 @@ export class UploadService {
 
         return upload
     }
+
+    async delete(id: number): Promise<void> {
+        const upload = await this.repo.findOneById(id)
+        if (upload) await this.repo.remove(upload)
+    }
 }
