@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import {
-	HttpException, Get, Post, Res, Controller, Inject, HttpCode, UploadedFile, FileInterceptor, Param,
-	UseInterceptors, Delete,
+    HttpException, Get, Post, Res, Controller, Inject, HttpCode, UploadedFile, FileInterceptor, Param,
+    UseInterceptors, Delete,
 } from '@nestjs/common'
 import { UploadService } from './service'
 import { Upload } from './entity'

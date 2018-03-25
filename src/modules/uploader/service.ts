@@ -25,10 +25,10 @@ export class UploadService {
             filename: file.originalname,
             mime: file.mimetype,
             size: file.size,
-			date: new Date()
+            date: new Date()
         })
 
-		await upload.addFile(file)
+        await upload.addFile(file)
 
         return this.repo.save(upload)
     }

@@ -43,7 +43,7 @@ export class Upload {
     }
 
     get path(): string {
-    	const fileName = `${this.date.getMilliseconds()}.${this.filename}`
+        const fileName = `${this.date.getMilliseconds()}.${this.filename}`
         return `${this.dirname}/${fileName}`
     }
 
