@@ -13,5 +13,6 @@ export const dbConfig: MysqlConnectionOptions = {
     username: env.DB_USER || 'm1cr0blog',
     password: env.DB_PASS,
     entities: [__dirname + '/**/*entity.{js,ts}'],
+    timezone: 'Z',
     synchronize: true
 }

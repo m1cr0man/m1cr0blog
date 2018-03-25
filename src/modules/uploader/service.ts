@@ -15,7 +15,7 @@ export class UploadService {
     }
 
     async findOne(id: number): Promise<Upload> {
-        const upload = await this.repo.findOneById(id)
+        const upload = await this.repo.findOne(id)
         if (!upload || !upload.exists()) throw new HttpException('File not found', 404)
         return upload
     }
@@ -24,7 +24,8 @@ export class UploadService {
         const upload = this.repo.create({
             filename: file.originalname,
             mime: file.mimetype,
-            size: file.size
+            size: file.size,
+			date: new Date()
         })
 
         // Save before adding the file, so that date and ID are set
@@ -35,7 +36,7 @@ export class UploadService {
     }
 
     async delete(id: number): Promise<void> {
-        const upload = await this.repo.findOneById(id)
+        const upload = await this.repo.findOne(id)
         if (upload) await this.repo.remove(upload)
     }
 }

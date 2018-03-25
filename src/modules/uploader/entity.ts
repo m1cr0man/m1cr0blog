@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, renameSync, unlinkSync } from 'fs'
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, BeforeRemove } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, BeforeRemove } from 'typeorm'
 import * as moment from 'moment'
 import { uploadRoot } from '../../config'
 
@@ -13,7 +13,7 @@ export class Upload {
     // @ts-ignore
     filename: string
 
-    @Column('int')
+    @Column('bigint')
     // @ts-ignore
     size: number
 
@@ -21,9 +21,9 @@ export class Upload {
     // @ts-ignore
     mime: string
 
-    @CreateDateColumn()
+    @Column('datetime', { precision: 3 })
     // @ts-ignore
-    readonly date: Date
+    date: Date
 
     @BeforeRemove()
     removeFile(): void {
