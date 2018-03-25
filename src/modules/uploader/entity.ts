@@ -13,7 +13,7 @@ export class Upload {
     // @ts-ignore
     readonly id: number
 
-    @Column('text')
+    @Column('varchar', { length: 510 })
     // @ts-ignore
     filename: string
 
