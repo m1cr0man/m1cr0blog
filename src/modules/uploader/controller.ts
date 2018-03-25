@@ -7,19 +7,19 @@ import { UploadService } from './service'
 import { Upload } from './entity'
 import { uploadRoot } from '../../config'
 
-@Controller()
+@Controller('/api/v1/uploads')
 export class UploadController {
     constructor(
         @Inject(UploadService)
         private readonly service: UploadService,
     ) {}
 
-    @Get('upload')
+    @Get()
     list(): Promise<Upload[]> {
         return this.service.find()
     }
 
-    @Post('upload')
+    @Post()
     @HttpCode(201)
     @UseInterceptors(FileInterceptor('file', { dest: uploadRoot }))
     upload(
@@ -29,14 +29,14 @@ export class UploadController {
         return this.service.create(file)
     }
 
-    @Get('upload/:id')
+    @Get(':id')
     view(
         @Param() id: number,
     ): Promise<Upload> {
         return this.service.findOne(id)
     }
 
-    @Delete('upload/:id')
+    @Delete(':id')
     @HttpCode(204)
     delete(
         @Param() id: number,
@@ -44,7 +44,7 @@ export class UploadController {
         return this.service.delete(id)
     }
 
-    @Get('upload/:id/download')
+    @Get(':id/download')
     async download(
         @Param() id: number,
         @Res() res: Response,
