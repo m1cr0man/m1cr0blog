@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Patch, Post, } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Patch, Post, Response, } from '@nestjs/common'
 import { UserService } from './service'
 import { User } from './entity'
-import { CreateUserDto } from './dtos'
+import { AuthUserDto, CreateUserDto } from './dtos'
+import { Response as IResponse } from 'express'
 
 @Controller('/api/v1/users')
 export class UserController {
@@ -23,8 +24,19 @@ export class UserController {
         return this.service.create(createUserDto)
     }
 
+    @Post('auth')
+    @HttpCode(201)
+    async auth(
+        @Body() authUserDto: AuthUserDto,
+        @Response() res: IResponse
+    ): Promise<IResponse> {
+        res.header['X-token'] = await this.service.authenticate(authUserDto)
+        return res.sendStatus(204)
+    }
+
     @Get(':name')
     view(
+        // TODO check out why this returns an object
         @Param() name: string,
     ): Promise<User> {
         return this.service.findOne(name)

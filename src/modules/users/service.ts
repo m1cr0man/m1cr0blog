@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { randomBytes } from 'crypto'
 import { User } from './entity'
-import { CreateUserDto } from './dtos'
+import { AuthUserDto, CreateUserDto } from './dtos'
 
 @Component()
 export class UserService {
@@ -16,13 +16,8 @@ export class UserService {
         return this.repo.find()
     }
 
-    async findOne(name: string, withPassword: boolean = false): Promise<User> {
-
-        // Toggle on/off the password field
-        const options: {select?: (keyof User)[]} = {}
-        if (withPassword) options['select'] = <(keyof User)[]>Object.keys(User)
-
-        const user = await this.repo.findOneById(name, options)
+    async findOne(name: string): Promise<User> {
+        const user = await this.repo.findOne({ name })
         if (!user) throw new HttpException('User not found', 404)
         return user
     }
@@ -59,6 +54,19 @@ export class UserService {
     async delete(name: string): Promise<void> {
         const user = await this.repo.findOneById(name)
         if (user) await this.repo.remove(user)
+    }
+
+    async authenticate(credentials: AuthUserDto): Promise<string> {
+        const user = await this.repo.findOne({
+            where: { name: credentials.name },
+            select: ['password', 'token']
+        })
+
+        if (!user || !await user.checkPassword(credentials.password)) {
+            throw new HttpException('Incorrect username/password', 400)
+        }
+
+        return user.token
     }
 
     private async safeSave(user: User): Promise<User> {

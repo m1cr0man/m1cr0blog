@@ -16,7 +16,7 @@ export class User {
     // Length of the bcrypt hashes
     @Column('char', { length: 60, select: false })
     // @ts-ignore
-    protected password: string
+    password: string
 
     @Column('json')
     // @ts-ignore
