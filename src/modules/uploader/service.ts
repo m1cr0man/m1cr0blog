@@ -15,7 +15,7 @@ export class UploadService {
     }
 
     async findOne(id: number): Promise<Upload> {
-        const upload = await this.repo.findOne(id)
+        const upload = await this.repo.findOneById(id)
         if (!upload) throw new HttpException('File not found', 404)
         return upload
     }
@@ -34,7 +34,7 @@ export class UploadService {
     }
 
     async delete(id: number): Promise<void> {
-        const upload = await this.repo.findOne(id)
+        const upload = await this.repo.findOneById(id)
         if (upload) await this.repo.remove(upload)
     }
 }

@@ -7,3 +7,8 @@ hidden/
 
 # VS Code
 *.code-*
+.vscode/
+
+# IntelliJ
+*.iml
+.idea/
