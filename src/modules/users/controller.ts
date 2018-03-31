@@ -11,12 +11,12 @@ export class UserController {
         private readonly service: UserService,
     ) {}
 
-    @Get()
+    @Get('manage')
     list(): Promise<User[]> {
         return this.service.find()
     }
 
-    @Post()
+    @Post('manage')
     @HttpCode(201)
     add(
         @Body() createUserDto: CreateUserDto
@@ -33,14 +33,14 @@ export class UserController {
         return res.sendStatus(204)
     }
 
-    @Get(':name')
+    @Get('manage/:name')
     view(
         @Param() params: { name: string },
     ): Promise<User> {
         return this.service.findOne(params.name)
     }
 
-    @Patch(':name')
+    @Patch('manage/:name')
     @HttpCode(201)
     patch(
         @Param() params: { name: string },
@@ -49,7 +49,7 @@ export class UserController {
         return this.service.update(params.name, updateUserDto)
     }
 
-    @Delete(':name')
+    @Delete('manage/:name')
     @HttpCode(204)
     delete(
         @Param() params: { name: string },

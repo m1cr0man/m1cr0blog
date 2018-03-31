@@ -63,10 +63,17 @@ export class UserService {
         })
 
         if (!user || !await user.checkPassword(credentials.password)) {
-            throw new HttpException('Incorrect username/password', 400)
+            throw new HttpException('Incorrect username/password', 401)
         }
 
         return user.token
+    }
+
+    async authenticateByToken(token: string): Promise<string> {
+        if (!await this.repo.findOne({ token })) {
+            throw new HttpException('Invalid token', 401)
+        }
+        return token
     }
 
     private async safeSave(user: User): Promise<User> {
