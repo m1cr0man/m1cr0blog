@@ -31,25 +31,25 @@ export class UploadController {
 
     @Get(':id')
     view(
-        @Param() id: number,
+        @Param() params: { id: number },
     ): Promise<Upload> {
-        return this.service.findOne(id)
+        return this.service.findOne(params.id)
     }
 
     @Delete(':id')
     @HttpCode(204)
     delete(
-        @Param() id: number,
+        @Param() params: { id: number },
     ): Promise<void> {
-        return this.service.delete(id)
+        return this.service.delete(params.id)
     }
 
     @Get(':id/download')
     async download(
-        @Param() id: number,
+        @Param() params: { id: number },
         @Res() res: Response,
     ): Promise<void> {
-        const upload = await this.service.findOne(id)
+        const upload = await this.service.findOne(params.id)
 
         // sendFile is the preferred method here - under the hood it uses a library
         // called send which handles partials and conditional GETs

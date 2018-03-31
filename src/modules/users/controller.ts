@@ -25,37 +25,35 @@ export class UserController {
     }
 
     @Post('auth')
-    @HttpCode(201)
     async auth(
         @Body() authUserDto: AuthUserDto,
         @Response() res: IResponse
     ): Promise<IResponse> {
-        res.header['X-token'] = await this.service.authenticate(authUserDto)
+        res.header('X-Token', await this.service.authenticate(authUserDto))
         return res.sendStatus(204)
     }
 
     @Get(':name')
     view(
-        // TODO check out why this returns an object
-        @Param() name: string,
+        @Param() params: { name: string },
     ): Promise<User> {
-        return this.service.findOne(name)
+        return this.service.findOne(params.name)
     }
 
     @Patch(':name')
     @HttpCode(201)
     patch(
-        @Param() name: string,
+        @Param() params: { name: string },
         @Body() updateUserDto: Partial<CreateUserDto>,
     ): Promise<User> {
-        return this.service.update(name, updateUserDto)
+        return this.service.update(params.name, updateUserDto)
     }
 
     @Delete(':name')
     @HttpCode(204)
     delete(
-        @Param() name: string
+        @Param() params: { name: string },
     ): Promise<void> {
-        return this.service.delete(name)
+        return this.service.delete(params.name)
     }
 }
