@@ -4,8 +4,8 @@ import {
     UseInterceptors, Delete,
 } from '@nestjs/common'
 import { UploadService } from './service'
-import { Upload } from './entity'
 import { uploadRoot } from '../../config'
+import { UploadResponseDto } from './dtos'
 
 @Controller('/api/v1/uploads')
 export class UploadController {
@@ -15,25 +15,27 @@ export class UploadController {
     ) {}
 
     @Get()
-    list(): Promise<Upload[]> {
-        return this.service.find()
+    async list(): Promise<UploadResponseDto[]> {
+        return (await this.service.find()).map(
+            upload => new UploadResponseDto(upload)
+        )
     }
 
     @Post()
     @HttpCode(201)
     @UseInterceptors(FileInterceptor('file', { dest: uploadRoot }))
-    upload(
+    async upload(
         @UploadedFile() file: Express.Multer.File // Express.Multer.File is in global namespace
-    ): Promise<Upload> {
+    ): Promise<UploadResponseDto> {
         if (!file) throw new HttpException('No file uploaded', 400)
-        return this.service.create(file)
+        return new UploadResponseDto(await this.service.create(file))
     }
 
     @Get(':id')
-    view(
+    async view(
         @Param() params: { id: number },
-    ): Promise<Upload> {
-        return this.service.findOne(params.id)
+    ): Promise<UploadResponseDto> {
+        return new UploadResponseDto(await this.service.findOne(params.id))
     }
 
     @Delete(':id')

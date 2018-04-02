@@ -1,8 +1,9 @@
 import { existsSync, mkdir, rename, unlinkSync } from 'fs'
-import { BeforeRemove, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BeforeRemove, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import * as moment from 'moment'
 import { uploadRoot } from '../../config'
 import { promisify } from 'util'
+import { User } from '../users/entity'
 
 const mkdirPromise = promisify(mkdir)
 const renamePromise = promisify(rename)
@@ -12,6 +13,10 @@ export class Upload {
     @PrimaryGeneratedColumn()
     // @ts-ignore
     readonly id: number
+
+    @ManyToOne(() => User, { cascadeAll: true, eager: true })
+    // @ts-ignore
+    user: User
 
     @Column('text')
     // @ts-ignore
@@ -51,5 +56,4 @@ export class Upload {
         if (!existsSync(this.dirname)) await mkdirPromise(this.dirname)
         await renamePromise(raw_file.path, this.path)
     }
-
 }
