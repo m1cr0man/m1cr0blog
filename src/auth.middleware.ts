@@ -15,7 +15,10 @@ export class AuthMiddleware implements NestMiddleware {
             // TODO return WWW-Authenticate header with 401
             const user = await this.checkAuthHeader(req)
             if (!user) throw new HttpException('Not authorized', 401)
-            req.user = user
+
+            // Create the session first if it doesn't already exist
+            req.session = req.session || {}
+            req.session.user = user
             next()
         }
     }
