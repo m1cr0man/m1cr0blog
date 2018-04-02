@@ -2,6 +2,7 @@ import { Component, HttpException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Upload } from './entity'
+import { User } from '../users/entity'
 
 @Component()
 export class UploadService {
@@ -10,8 +11,8 @@ export class UploadService {
         private readonly repo: Repository<Upload>,
     ) {}
 
-    find(): Promise<Upload[]> {
-        return this.repo.find()
+    find(user: User): Promise<Upload[]> {
+        return this.repo.find({ user })
     }
 
     async findOne(id: number): Promise<Upload> {
@@ -20,12 +21,13 @@ export class UploadService {
         return upload
     }
 
-    async create(file: Express.Multer.File): Promise<Upload> {
+    async create(file: Express.Multer.File, user: User): Promise<Upload> {
         const upload = this.repo.create({
             filename: file.originalname,
             mime: file.mimetype,
             size: file.size,
-            date: new Date()
+            date: new Date(),
+            user: user
         })
 
         await upload.addFile(file)
@@ -33,8 +35,10 @@ export class UploadService {
         return this.repo.save(upload)
     }
 
-    async delete(id: number): Promise<void> {
+    async delete(id: number, user: User): Promise<void> {
         const upload = await this.repo.findOneById(id)
-        if (upload) await this.repo.remove(upload)
+        if (upload && upload.user.name != user.name)
+            throw new HttpException('Forbidden', 403)
+        else if (upload) await this.repo.remove(upload)
     }
 }

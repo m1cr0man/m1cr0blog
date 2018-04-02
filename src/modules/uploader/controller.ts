@@ -1,7 +1,7 @@
-import { Response } from 'express'
+import { session, Response } from 'express'
 import {
     HttpException, Get, Post, Res, Controller, Inject, HttpCode, UploadedFile, FileInterceptor, Param,
-    UseInterceptors, Delete,
+    UseInterceptors, Delete, Session,
 } from '@nestjs/common'
 import { UploadService } from './service'
 import { uploadRoot } from '../../config'
@@ -15,8 +15,10 @@ export class UploadController {
     ) {}
 
     @Get()
-    async list(): Promise<UploadResponseDto[]> {
-        return (await this.service.find()).map(
+    async list(
+        @Session() session: session,
+    ): Promise<UploadResponseDto[]> {
+        return (await this.service.find(session.user)).map(
             upload => new UploadResponseDto(upload)
         )
     }
@@ -25,10 +27,11 @@ export class UploadController {
     @HttpCode(201)
     @UseInterceptors(FileInterceptor('file', { dest: uploadRoot }))
     async upload(
-        @UploadedFile() file: Express.Multer.File // Express.Multer.File is in global namespace
+        @UploadedFile() file: Express.Multer.File, // Express.Multer.File is in global namespace
+        @Session() session: session,
     ): Promise<UploadResponseDto> {
         if (!file) throw new HttpException('No file uploaded', 400)
-        return new UploadResponseDto(await this.service.create(file))
+        return new UploadResponseDto(await this.service.create(file, session.user))
     }
 
     @Get(':id')
@@ -42,8 +45,9 @@ export class UploadController {
     @HttpCode(204)
     delete(
         @Param() params: { id: number },
+        @Session() session: session,
     ): Promise<void> {
-        return this.service.delete(params.id)
+        return this.service.delete(params.id, session.user)
     }
 
     @Get(':id/download')

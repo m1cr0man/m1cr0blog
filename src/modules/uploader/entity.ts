@@ -14,7 +14,7 @@ export class Upload {
     // @ts-ignore
     readonly id: number
 
-    @ManyToOne(() => User, { cascadeAll: true, eager: true })
+    @ManyToOne(() => User, { eager: true })
     // @ts-ignore
     user: User
 

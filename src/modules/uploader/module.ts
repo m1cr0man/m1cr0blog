@@ -19,7 +19,7 @@ export class UploadModule implements NestModule {
         .forRoutes(
             { path: 'api/v1/uploads', method: RequestMethod.GET },
             { path: 'api/v1/uploads', method: RequestMethod.POST },
-            { path: 'api/v1/uploads/.*', method: RequestMethod.DELETE },
+            { path: 'api/v1/uploads/:id', method: RequestMethod.DELETE },
         )
     }
 }
