@@ -29,7 +29,9 @@ export class UserController {
         @Body() authUserDto: AuthUserDto,
         @Response() res: IResponse
     ): Promise<IResponse> {
-        res.header('X-Token', await this.service.authenticate(authUserDto))
+        res.header('X-Token',
+            (await this.service.authenticate(authUserDto)).token
+        )
         return res.sendStatus(204)
     }
 

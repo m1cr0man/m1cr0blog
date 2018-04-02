@@ -56,7 +56,7 @@ export class UserService {
         if (user) await this.repo.remove(user)
     }
 
-    async authenticate(credentials: AuthUserDto): Promise<string> {
+    async authenticate(credentials: AuthUserDto): Promise<User> {
         const user = await this.repo.findOne({
             where: { name: credentials.name },
             select: ['password', 'token']
@@ -66,14 +66,15 @@ export class UserService {
             throw new HttpException('Incorrect username/password', 401)
         }
 
-        return user.token
+        return user
     }
 
-    async authenticateByToken(token: string): Promise<string> {
-        if (!await this.repo.findOne({ token })) {
+    async authenticateByToken(token: string): Promise<User> {
+        const user = await this.repo.findOne({ token })
+        if (!user) {
             throw new HttpException('Invalid token', 401)
         }
-        return token
+        return user
     }
 
     private async safeSave(user: User): Promise<User> {

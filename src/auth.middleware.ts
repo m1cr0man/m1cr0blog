@@ -1,6 +1,7 @@
 import { ExpressMiddleware, HttpException, Inject, Middleware, NestMiddleware } from '@nestjs/common'
 import { UserService } from './modules/users/service'
 import { NextFunction, Request, Response } from 'express'
+import { User } from './modules/users/entity'
 
 @Middleware()
 export class AuthMiddleware implements NestMiddleware {
@@ -12,15 +13,17 @@ export class AuthMiddleware implements NestMiddleware {
     resolve(endpoint: string): ExpressMiddleware {
         return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
             // TODO return WWW-Authenticate header with 401
-            if (!await this.checkAuthHeader(req)) throw new HttpException('Not authorized', 401)
+            const user = await this.checkAuthHeader(req)
+            if (!user) throw new HttpException('Not authorized', 401)
+            req.user = user
             next()
         }
     }
 
-    protected checkAuthHeader(req: Request): Promise<string | boolean> {
+    protected checkAuthHeader(req: Request): Promise<User | false> {
         const raw_header = (req.header('Authorization') || '').split(' ')
 
-        if (raw_header.length != 2) return (async () => false)()
+        if (raw_header.length != 2) return (async (): Promise<false> => false)()
 
         switch (raw_header[0]) {
             case 'Basic': {
@@ -35,7 +38,7 @@ export class AuthMiddleware implements NestMiddleware {
                 return this.userService.authenticateByToken(token)
             }
             default: {
-                return (async () => false)()
+                return (async (): Promise<false> => false)()
             }
         }
     }
