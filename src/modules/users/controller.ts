@@ -12,7 +12,7 @@ export class UserController {
     ) {}
 
     @Get('manage')
-    list(): Promise<User[]> {
+    list(): User[] {
         return this.service.find()
     }
 
@@ -38,7 +38,7 @@ export class UserController {
     @Get('manage/:name')
     view(
         @Param() params: { name: string },
-    ): Promise<User> {
+    ): User {
         return this.service.findOne(params.name)
     }
 
@@ -55,7 +55,13 @@ export class UserController {
     @HttpCode(204)
     delete(
         @Param() params: { name: string },
-    ): Promise<void> {
+    ): void {
         return this.service.delete(params.name)
+    }
+
+    @Post('init')
+    @HttpCode(201)
+    init(): Promise<void> {
+        return this.service.init()
     }
 }

@@ -1,29 +1,31 @@
-import { Column, Entity } from 'typeorm'
-import { compare, hash, genSaltSync} from 'bcryptjs'
+import { compare, genSaltSync, hash } from 'bcryptjs'
+import { BaseEntity, JSONData } from '../../fsrepo/entity'
 
 const salt = genSaltSync(10)
 
-@Entity()
-export class User {
-    @Column('varchar', { primary: true })
-    // @ts-ignore
-    name: string
+export class User extends BaseEntity {
+    constructor(
+        @BaseEntity.Serialize('id')
+        public id: string,
+        @BaseEntity.Serialize('name')
+        public name: string,
+        @BaseEntity.Serialize('token')
+        public token: string,
+        @BaseEntity.Serialize('password')
+        @BaseEntity.Hide('password')
+        public password: string,
+        @BaseEntity.Serialize('permissions')
+        public permissions: string[] = []
+    ) {
+        super()
+    }
 
-    @Column('char', { length: 24, unique: true })
-    // @ts-ignore
-    token: string
+    static fromSerializableObject({id, name, token, password, permissions}: JSONData<User>): User {
+        return new User(id, name, token, password, permissions)
+    }
 
-    // Length of the bcrypt hashes
-    @Column('char', { length: 60, select: false })
-    // @ts-ignore
-    password: string
-
-    @Column('json')
-    // @ts-ignore
-    permissions: string[]
-
-    async setPassword(plain_pwd: string): Promise<void> {
-        this.password = await hash(plain_pwd, salt)
+    static hashPassword(plain_pwd: string): Promise<string> {
+        return hash(plain_pwd, salt)
     }
 
     checkPassword(plain_pwd: string): Promise<boolean> {

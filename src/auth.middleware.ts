@@ -38,7 +38,7 @@ export class AuthMiddleware implements NestMiddleware {
             }
             case 'Bearer': {
                 const token = raw_header[1]
-                return this.userService.authenticateByToken(token)
+                return (async () => this.userService.authenticateByToken(token))()
             }
             default: {
                 return (async (): Promise<false> => false)()

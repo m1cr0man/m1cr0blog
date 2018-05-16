@@ -1,23 +1,22 @@
-import { Component, HttpException } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Component, HttpException, Inject } from '@nestjs/common'
 import { randomBytes } from 'crypto'
 import { User } from './entity'
 import { AuthUserDto, CreateUserDto } from './dtos'
+import { UserRepository } from './repository'
 
 @Component()
 export class UserService {
     constructor(
-        @InjectRepository(User)
-        private readonly repo: Repository<User>,
+        @Inject(UserRepository)
+        private readonly repo: UserRepository,
     ) {}
 
-    find(): Promise<User[]> {
+    find(): User[] {
         return this.repo.find()
     }
 
-    async findOne(name: string): Promise<User> {
-        const user = await this.repo.findOne({ name })
+    findOne(name: string): User {
+        const user = this.repo.findOne(name)
         if (!user) throw new HttpException('User not found', 404)
         return user
     }
@@ -25,42 +24,38 @@ export class UserService {
     async create(new_user: CreateUserDto): Promise<User> {
 
         // Don't allow update of existing users
-        if (await this.repo.findOneById(new_user.name)) throw new HttpException('User name taken', 400)
+        if (this.repo.exists(new_user.name)) throw new HttpException('User name taken', 400)
 
-        const user = this.repo.create({
-            name: new_user.name,
-            token: new_user.token || randomBytes(24).toString('hex'),
-            permissions: new_user.permissions || [],
-        })
+        const user = new User(
+            this.repo.generateId(new_user),
+            new_user.name,
+            randomBytes(24).toString('hex'),
+            await User.hashPassword(new_user.password)
+        )
+        this.repo.save(user)
 
-        await user.setPassword(new_user.password)
-
-        return this.safeSave(user)
+        return user
     }
 
     async update(name: string, new_user: Partial<CreateUserDto>): Promise<User> {
         const user = await this.findOne(name)
 
         if (new_user.password) {
-            user.setPassword(new_user.password)
-            delete new_user.password
+            new_user.password = await User.hashPassword(new_user.password)
         }
 
-        return this.safeSave(
-            this.repo.merge(user, new_user)
-        )
+        const updated_user = this.repo.merge(user, new_user)
+        this.repo.save(updated_user)
+        return updated_user
     }
 
-    async delete(name: string): Promise<void> {
-        const user = await this.repo.findOneById(name)
-        if (user) await this.repo.remove(user)
+    delete(name: string): void {
+        const user = this.repo.findOne(name)
+        if (user) this.repo.delete(user)
     }
 
     async authenticate(credentials: AuthUserDto): Promise<User> {
-        const user = await this.repo.findOne({
-            where: { name: credentials.name },
-            select: ['password', 'token']
-        })
+        const user = this.repo.findOne(credentials.name)
 
         if (!user || !await user.checkPassword(credentials.password)) {
             throw new HttpException('Incorrect username/password', 401)
@@ -69,19 +64,22 @@ export class UserService {
         return user
     }
 
-    async authenticateByToken(token: string): Promise<User> {
-        const user = await this.repo.findOne({ token })
+    authenticateByToken(token: string): User {
+        const user = this.repo.findOneByToken(token)
         if (!user) {
             throw new HttpException('Invalid token', 401)
         }
         return user
     }
 
-    private async safeSave(user: User): Promise<User> {
-        try {
-            return await this.repo.save(user)
-        } catch (err) {
-            throw new HttpException(err.message, 400)
-        }
+    async init(): Promise<void> {
+
+        // Don't do anything if a user exists already
+        if (this.find().length) return
+
+        await this.create({
+            name: 'lucas',
+            password: 'temppwd'
+        })
     }
 }

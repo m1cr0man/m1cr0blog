@@ -1,53 +1,28 @@
-import { Component } from '@nestjs/common'
-import * as fs from 'fs'
+import { Repository } from '../../fsrepo/repository'
 import { User } from './entity'
-import * as path from 'path'
 
-@Component()
-export class UsersRepository<Object extends User> {
-    root: string
+export class UserRepository extends Repository<User> {
+    tokenCache: {[index: string]: string}
 
-    constructor(root: string) {
-        this.root = root
+    constructor() {
+        super('users', User)
+        this.tokenCache = {}
 
-        if (!fs.existsSync(root)) fs.mkdirSync(root)
+        this.find().map(x => this.tokenCache[x.token] = x.id)
     }
 
-    protected writeData(user: Object) {
-        fs.writeFileSync(this.getPath(user), JSON.stringify(user))
+    // Use user name as ID
+    generateId(ent: { name: string }) {
+        return ent.name
     }
 
-    protected readData(name: string): Object {
-        return JSON.parse(fs.readFileSync(path.join(this.root, name)).toString('utf-8'))
+    save(ent: User): boolean {
+        this.tokenCache[ent.token] = ent.id
+        return super.save(ent)
     }
 
-    getPath(user: Object): string {
-        return path.join(this.root, user.name)
-    }
-
-    create(user: Object): boolean {
-        if (fs.existsSync(this.getPath(user))) return false
-
-        this.writeData(user)
-
-        return true
-    }
-
-    delete(user: Object): void {
-        if (fs.existsSync(this.getPath(user))) fs.unlinkSync(this.getPath(user))
-    }
-
-    update(name: string, data: Partial<Object>) {
-        const user = <Object>{...<object>this.readData(name), ...<object>data}
-
-        this.writeData(user)
-    }
-
-    findOne(name: string): User {
-        return this.readData(name)
-    }
-
-    find(): User[] {
-        return fs.readdirSync(this.root).map(x => this.readData(x))
+    findOneByToken(token: string): User | false {
+        const id = this.tokenCache[token]
+        return id !== undefined && super.findOne(id)
     }
 }
