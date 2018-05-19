@@ -14,7 +14,7 @@
   "dependencies": {
     "@nestjs/common": "^4.6.6",
     "@nestjs/core": "^4.6.6",
-    "@nestjs/swagger": "^2.0.0",
+    "@nestjs/swagger": "^1.3.1",
     "@types/bcryptjs": "^2.4.1",
     "@types/multer": "^1.3.6",
     "@types/node": "^9.6.16",

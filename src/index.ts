@@ -10,9 +10,10 @@ async function bootstrap(): Promise<void> {
         .setTitle('M1cr0blog API')
         .setDescription('Backend REST API for m1cr0man\'s blog')
         .setVersion('1.0')
+        .addTag('Users', 'User management system')
         .build()
     const document = SwaggerModule.createDocument(app, options)
-    SwaggerModule.setup('api', app, document)
+    SwaggerModule.setup('api/swagger', app, document)
 
     await app.listen(3000)
 }

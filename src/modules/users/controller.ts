@@ -1,9 +1,11 @@
 import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Patch, Post, Response, } from '@nestjs/common'
+import { ApiImplicitBody, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger'
 import { UserService } from './service'
 import { User } from './entity'
 import { AuthUserDto, CreateUserDto } from './dtos'
 import { Response as IResponse } from 'express'
 
+@ApiUseTags('Users')
 @Controller('/api/v1/users')
 export class UserController {
     constructor(
@@ -17,6 +19,7 @@ export class UserController {
     }
 
     @Post('manage')
+    @ApiOperation({ title: 'Add a user' })
     @HttpCode(201)
     add(
         @Body() createUserDto: CreateUserDto
@@ -25,6 +28,13 @@ export class UserController {
     }
 
     @Post('auth')
+    @ApiOperation({ title: 'Login and authenticate' })
+    @ApiResponse({ status: 204, description: 'Login successful' })
+    @ApiImplicitBody({
+        name: 'credentials',
+        type: AuthUserDto,
+
+    })
     async auth(
         @Body() authUserDto: AuthUserDto,
         @Response() res: IResponse
