@@ -1,6 +1,7 @@
 import { Component, HttpException } from '@nestjs/common'
 import { Upload } from './entity'
 import { User } from '../users/entity'
+import { ReadStream } from 'fs'
 
 @Component()
 export class UploadsService {
@@ -15,6 +16,11 @@ export class UploadsService {
         return upload
     }
 
+    static read(user: User, id: string): ReadStream {
+        const upload = UploadsService.findOne(user, id)
+        return user.uploads.loadFile(upload)
+    }
+
     static async create(user: User, file: Express.Multer.File): Promise<Upload> {
         const upload = new Upload(
             user.uploads.generateId(),
@@ -23,6 +29,7 @@ export class UploadsService {
             3600
         )
         user.uploads.save(upload)
+        user.uploads.saveFile(file, upload)
 
         return upload
     }

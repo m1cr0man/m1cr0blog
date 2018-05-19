@@ -75,7 +75,7 @@ export class Repository<Entity extends BaseEntity> {
     }
 
     findOne(id: string): Entity | false {
-        return this.exists(id) && this.readData(id)
+        return typeof id == 'string' && this.exists(id) && this.readData(id)
     }
 
     find(): Entity[] {

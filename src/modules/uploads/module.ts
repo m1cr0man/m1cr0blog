@@ -1,12 +1,12 @@
 import { MiddlewaresConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { AuthMiddleware } from '../../auth.middleware'
 import { UploadsController } from './controller'
-import { UploadsRepository } from './repository'
 import { UserService } from '../users/service'
+import { UserRepository } from '../users/repository'
 
 @Module({
     controllers: [UploadsController],
-    components: [UserService, UploadsRepository],
+    components: [UserService, UserRepository],
 })
 export class UploadsModule implements NestModule {
     configure(consumer: MiddlewaresConsumer): void {

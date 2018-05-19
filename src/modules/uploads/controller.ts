@@ -17,9 +17,10 @@ import { UploadsService } from './service'
 import { AuthedUser } from '../../auth.middleware'
 import { User } from '../users/entity'
 import { UserService } from '../users/service'
+import { ReadStream } from 'fs'
 
 @ApiUseTags('Uploads')
-@Controller('/api/v1/uploads/:user')
+@Controller('/api/v1/uploads')
 export class UploadsController {
     constructor(
         @Inject(UserService)
@@ -45,7 +46,17 @@ export class UploadsController {
         return UploadsService.create(user, file)
     }
 
-    @Get(':id')
+    @Delete(':id')
+    @ApiOperation({ title: 'Delete' })
+    @HttpCode(204)
+    delete(
+        @AuthedUser() user: User,
+        @Param() params: { id: string }
+    ): void {
+        return UploadsService.delete(user, params.id)
+    }
+
+    @Get(':name/:id')
     @ApiOperation({ title: 'View' })
     @HttpCode(200)
     view(
@@ -57,23 +68,13 @@ export class UploadsController {
         return upload
     }
 
-    @Delete(':id')
-    @ApiOperation({ title: 'Delete' })
-    @HttpCode(204)
-    delete(
-        @AuthedUser() user: User,
-        @Param() params: { id: string }
-    ): void {
-        return UploadsService.delete(user, params.id)
-    }
-
-    @Get(':id/download')
+    @Get(':name/:id/download')
     @ApiOperation({ title: 'Download' })
     // TODO add file name header
     download(
         @Param() params: { id: string, user: string }
-    ): Upload {
+    ): ReadStream {
         const user = this.userService.findOne(params.user)
-        return UploadsService.findOne(user, params.id)
+        return UploadsService.read(user, params.id)
     }
 }
