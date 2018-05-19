@@ -1,7 +1,16 @@
-import { ExpressMiddleware, HttpException, Inject, Middleware, NestMiddleware } from '@nestjs/common'
-import { UserService } from './modules/users/service'
+import {
+    createRouteParamDecorator,
+    ExpressMiddleware,
+    HttpException,
+    Inject,
+    Middleware,
+    NestMiddleware,
+} from '@nestjs/common'
 import { NextFunction, Request, Response } from 'express'
 import { User } from './modules/users/entity'
+import { UserService } from './modules/users/service'
+
+export const AuthedUser = createRouteParamDecorator((data, req) => req.user)
 
 @Middleware()
 export class AuthMiddleware implements NestMiddleware {
@@ -16,9 +25,7 @@ export class AuthMiddleware implements NestMiddleware {
             const user = await this.checkAuthHeader(req)
             if (!user) throw new HttpException('Not authorized', 401)
 
-            // Create the session first if it doesn't already exist
-            req.session = req.session || {}
-            req.session.user = user
+            req.user = user
             next()
         }
     }
