@@ -19,8 +19,10 @@ export class UploadsService {
         const upload = new Upload(
             user.uploads.generateId(),
             file.originalname,
+            file.mimetype,
             new Date(),
-            3600
+            3600,
+            file.size
         )
         user.uploads.save(upload)
         user.uploads.saveFile(file, upload)

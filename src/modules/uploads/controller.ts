@@ -71,7 +71,6 @@ export class UploadsController {
 
     @Get(':user/:id/download')
     @ApiOperation({ title: 'Download' })
-    // TODO add file name header
     download(
         @Param() params: { id: string, user: string },
         @Response() res: IResponse
@@ -79,6 +78,12 @@ export class UploadsController {
         const user = this.userService.findOne(params.user)
         const upload = user.uploads.findOne(params.id)
         if (!upload) throw new HttpException('Upload not found', 404)
-        return res.sendFile(user.uploads.getPath(upload), {root: '.'})
+        return res.sendFile(user.uploads.getPath(upload), {
+            root: '.',
+            headers: {
+                'Content-Disposition': `attachment; filename="${upload.filename}"`,
+                'Content-Type': upload.mime
+            }
+        })
     }
 }
