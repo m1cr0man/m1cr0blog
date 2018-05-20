@@ -56,7 +56,7 @@ export class UploadsController {
         return UploadsService.delete(user, params.id)
     }
 
-    @Get(':name/:id')
+    @Get(':user/:id')
     @ApiOperation({ title: 'View' })
     @HttpCode(200)
     view(
@@ -68,7 +68,7 @@ export class UploadsController {
         return upload
     }
 
-    @Get(':name/:id/download')
+    @Get(':user/:id/download')
     @ApiOperation({ title: 'Download' })
     // TODO add file name header
     download(
