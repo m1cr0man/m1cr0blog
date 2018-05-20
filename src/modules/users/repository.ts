@@ -1,5 +1,7 @@
 import { Repository } from '../../fsrepo/repository'
 import { User } from './entity'
+import { join as j } from "path"
+import { existsSync } from "fs"
 
 export class UserRepository extends Repository<User> {
     tokenCache: {[index: string]: string}
@@ -11,9 +13,12 @@ export class UserRepository extends Repository<User> {
         this.find().map(x => this.tokenCache[x.token] = x.id)
     }
 
-    // Use user name as ID
     generateId(ent: { name: string }) {
-        return ent.name
+        let id;
+        do {
+            id = Math.random().toString(36).slice(-2)
+        } while (existsSync(j(this.root, id)))
+        return id
     }
 
     save(ent: User): boolean {
