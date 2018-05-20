@@ -13,15 +13,13 @@ export class Upload extends BaseEntity {
         @BaseEntity.Serialize('lifespan')
         public lifespan: number,
         @BaseEntity.Serialize('size')
-        public size: number,
-        @BaseEntity.Serialize('views')
-        public views: number = 0
+        public size: number
     ) {
         super()
     }
 
-    static fromJSON({id, filename, mime, date, lifespan, size, views}: JSONData<Upload>): Upload {
+    static fromJSON({id, filename, mime, date, lifespan, size}: JSONData<Upload>): Upload {
         return new Upload(id, filename, mime, new Date(date),
-                          lifespan, size, views)
+                          lifespan, size)
     }
 }
