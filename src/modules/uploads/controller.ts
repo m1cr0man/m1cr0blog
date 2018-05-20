@@ -10,6 +10,7 @@ import {
     Post,
     UploadedFile,
     UseInterceptors,
+    Response
 } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { Upload } from './entity'
@@ -17,7 +18,7 @@ import { UploadsService } from './service'
 import { AuthedUser } from '../../auth.middleware'
 import { User } from '../users/entity'
 import { UserService } from '../users/service'
-import { ReadStream } from 'fs'
+import { Response as IResponse } from 'express'
 
 @ApiUseTags('Uploads')
 @Controller('/api/v1/uploads')
@@ -72,9 +73,12 @@ export class UploadsController {
     @ApiOperation({ title: 'Download' })
     // TODO add file name header
     download(
-        @Param() params: { id: string, user: string }
-    ): ReadStream {
+        @Param() params: { id: string, user: string },
+        @Response() res: IResponse
+    ): void {
         const user = this.userService.findOne(params.user)
-        return UploadsService.read(user, params.id)
+        const upload = user.uploads.findOne(params.id)
+        if (!upload) throw new HttpException('Upload not found', 404)
+        return res.sendFile(user.uploads.getPath(upload), {root: '.'})
     }
 }

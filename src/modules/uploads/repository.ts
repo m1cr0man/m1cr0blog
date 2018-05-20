@@ -1,7 +1,7 @@
 import { Repository } from '../../fsrepo/repository'
 import { Upload } from './entity'
 import { User } from '../users/entity'
-import { createReadStream, existsSync, ReadStream, renameSync } from 'fs'
+import { existsSync, renameSync } from 'fs'
 import { join as j } from 'path'
 
 export class UploadsRepository extends Repository<Upload> {
@@ -18,11 +18,12 @@ export class UploadsRepository extends Repository<Upload> {
         return id
     }
 
-    saveFile(file: Express.Multer.File, upload: Upload): void {
-        return renameSync(file.path, j(this.getDir(upload), 'bytestream'))
+    getPath(upload: Upload): string {
+        return j(this.getDir(upload), 'bytestream')
     }
 
-    loadFile(upload: Upload): ReadStream {
-        return createReadStream(j(this.getDir(upload), 'bytestream'))
+    saveFile(file: Express.Multer.File, upload: Upload): void {
+        return renameSync(file.path, this.getPath(upload))
     }
+
 }
