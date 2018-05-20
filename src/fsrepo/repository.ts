@@ -2,6 +2,19 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { BaseEntity } from './entity'
 
+function recursiveDelete(fpath: string): void {
+    if (!fs.existsSync(fpath)) return
+
+    const stats = fs.lstatSync(fpath)
+
+    if (stats.isDirectory()) {
+        for (let child of fs.readdirSync(fpath)) recursiveDelete(path.join(fpath, child))
+        fs.rmdirSync(fpath)
+    } else {
+        fs.unlinkSync(fpath)
+    }
+}
+
 export class Repository<Entity extends BaseEntity> {
     root: string
     enttype
@@ -71,7 +84,7 @@ export class Repository<Entity extends BaseEntity> {
     }
 
     delete(ent: Entity): void {
-        if (fs.existsSync(this.getDir(ent))) fs.unlinkSync(this.getDir(ent))
+        recursiveDelete(this.getDir(ent))
     }
 
     findOne(id: string): Entity | false {
