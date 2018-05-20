@@ -3,14 +3,14 @@ import {
     Delete,
     FileInterceptor,
     Get,
+    Headers,
     HttpCode,
-    HttpException,
     Inject,
     Param,
     Post,
+    Response,
     UploadedFile,
     UseInterceptors,
-    Response, Headers,
 } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { Upload } from './entity'
@@ -71,8 +71,7 @@ export class UploadsController {
         @Param() params: { id: string, user: string }
     ): Upload {
         const user = this.userService.findOne(params.user)
-        const upload = user.uploads.findOne(params.id)
-        if (!upload) throw new HttpException('Upload not found', 404)
+        const upload = UploadsService.findOne(user, params.id)
         return upload
     }
 
@@ -83,8 +82,7 @@ export class UploadsController {
         @Response() res: IResponse
     ): void {
         const user = this.userService.findOne(params.user)
-        const upload = user.uploads.findOne(params.id)
-        if (!upload) throw new HttpException('Upload not found', 404)
+        const upload = UploadsService.findOne(user, params.id)
         return res.sendFile(user.uploads.getPath(upload), {
             root: '.',
             headers: {
