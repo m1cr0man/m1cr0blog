@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { M1cr0blogModule } from './modules/m1cr0blog/module'
 
 async function bootstrap(): Promise<void> {
-    const app = await NestFactory.create(M1cr0blogModule)
+    const app = await NestFactory.create(M1cr0blogModule, { cors: true })
 
     // Set up Swagger
     const options = new DocumentBuilder()
