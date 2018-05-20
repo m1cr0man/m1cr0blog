@@ -15,13 +15,13 @@ export class UploadsService {
         return upload
     }
 
-    static async create(user: User, file: Express.Multer.File): Promise<Upload> {
+    static async create(user: User, file: Express.Multer.File, lifespan: number = 84): Promise<Upload> {
         const upload = new Upload(
             user.uploads.generateId(),
             file.originalname,
             file.mimetype,
             new Date(),
-            3600,
+            lifespan,
             file.size
         )
         user.uploads.save(upload)

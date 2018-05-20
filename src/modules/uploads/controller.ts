@@ -10,7 +10,7 @@ import {
     Post,
     UploadedFile,
     UseInterceptors,
-    Response
+    Response, Headers,
 } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { Upload } from './entity'
@@ -48,9 +48,10 @@ export class UploadsController {
     @UseInterceptors(FileInterceptor('file', { dest: 'uploads' }))
     async add(
         @AuthedUser() user: User,
-        @UploadedFile() file: Express.Multer.File // Express.Multer.File is in global namespace
+        @UploadedFile() file: Express.Multer.File, // Express.Multer.File is in global namespace
+        @Headers('x-lifespan') lifespan: number | string = 84
     ): Promise<Upload> {
-        return UploadsService.create(user, file)
+        return UploadsService.create(user, file, +lifespan)
     }
 
     @Delete(':id')
