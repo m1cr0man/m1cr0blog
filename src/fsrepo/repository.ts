@@ -18,12 +18,12 @@ export class Repository<Entity extends BaseEntity> {
     protected writeData(ent: Entity) {
         fs.writeFileSync(
             this.getMetaPath(ent),
-            ent.toJSON(true)
+            JSON.stringify(ent.toJSON(true))
         )
     }
 
     protected readData(id: string): Entity {
-        return this.enttype.fromSerializableObject(JSON.parse(
+        return this.enttype.fromJSON(JSON.parse(
             fs.readFileSync(path.join(this.root, id, this.metafile)
             ).toString('utf-8')
         ))

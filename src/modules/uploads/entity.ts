@@ -16,7 +16,7 @@ export class Upload extends BaseEntity {
         super()
     }
 
-    static fromSerializableObject({id, filename, date, lifespan, views}: JSONData<Upload>): Upload {
-        return new Upload(id, filename, date, lifespan, views)
+    static fromJSON({id, filename, date, lifespan, views}: JSONData<Upload>): Upload {
+        return new Upload(id, filename, new Date(date), lifespan, views)
     }
 }

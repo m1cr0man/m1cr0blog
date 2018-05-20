@@ -12,7 +12,8 @@ export abstract class BaseEntity {
 
     constructor() {}
 
-    toSerializableObject(showHidden: boolean = false): JSONData<this> {
+    toJSON(showHidden: boolean | string = false): JSONData<this> {
+        if (typeof showHidden != 'boolean') showHidden = false
         const target = Object.getPrototypeOf(this).constructor
         const params = Reflect.getMetadata(serializeMetaKey, target)
         return (params || [])
@@ -23,13 +24,7 @@ export abstract class BaseEntity {
             )
     }
 
-    static fromSerializableObject(data: any): any {}
-
-    // TODO change toSerializeObject to toJSON
-    toJSON(showHidden: boolean | string = false): JSONData<this> {
-        if (typeof showHidden != 'boolean') showHidden = false
-        return this.toSerializableObject(showHidden)
-    }
+    static fromJSON(data: any): any {}
 
     static Serialize(key: string) {
         return (target: typeof BaseEntity, ..._: any[]) => {

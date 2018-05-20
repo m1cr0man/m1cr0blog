@@ -13,7 +13,7 @@ export class UploadsRepository extends Repository<Upload> {
     generateId() {
         let id;
         do {
-            id = Math.random().toString(36).slice(-4)
+            id = Math.random().toString(36).slice(-3)
         } while (existsSync(j(this.root, id)))
         return id
     }

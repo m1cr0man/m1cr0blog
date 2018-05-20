@@ -24,7 +24,7 @@ export class User extends BaseEntity {
         this.uploads = new UploadsRepository(this)
     }
 
-    static fromSerializableObject({id, name, token, password, permissions}: JSONData<User>): User {
+    static fromJSON({id, name, token, password, permissions}: JSONData<User>): User {
         return new User(id, name, token, password, permissions)
     }
 
