@@ -34,4 +34,13 @@ export class UploadsService {
         const upload = user.uploads.findOne(id)
         if (upload) user.uploads.delete(upload)
     }
+
+    static clean(user: User) {
+        const currentDate = (new Date()).getTime()
+        for (let upload of UploadsService.find(user)) {
+            if (upload.lifespan == -1) continue
+            upload.date.setHours(upload.date.getHours() + upload.lifespan)
+            if (upload.date.getTime() < currentDate) user.uploads.delete(upload)
+        }
+    }
 }

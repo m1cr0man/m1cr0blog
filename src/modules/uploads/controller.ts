@@ -26,7 +26,13 @@ export class UploadsController {
     constructor(
         @Inject(UserService)
         private readonly userService: UserService,
-    ) {}
+    ) {
+        // Set up expiry monitor
+        // Runs every 5 minutes
+        setInterval(() => {
+            for (let user of this.userService.find()) UploadsService.clean(user)
+        }, 1000 * 60 * 5)
+    }
 
     @Get()
     @ApiOperation({ title: 'List' })
