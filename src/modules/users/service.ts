@@ -3,22 +3,15 @@ import { randomBytes } from 'crypto'
 import { User } from './entity'
 import { AuthUserDto, CreateUserDto } from './dtos'
 import { UserRepository } from './repository'
+import { BaseService } from '../../fsrepo/service'
 
 @Component()
-export class UserService {
+export class UserService extends BaseService<User> {
     constructor(
         @Inject(UserRepository)
-        private readonly repo: UserRepository,
-    ) {}
-
-    find(): User[] {
-        return this.repo.find()
-    }
-
-    findOne(name: string): User {
-        const user = this.repo.findOne(name)
-        if (!user) throw new HttpException('User not found', 404)
-        return user
+        readonly repo: UserRepository,
+    ) {
+        super()
     }
 
     async create(new_user: CreateUserDto): Promise<User> {
@@ -38,20 +31,10 @@ export class UserService {
     }
 
     async update(name: string, new_user: Partial<CreateUserDto>): Promise<User> {
-        const user = await this.findOne(name)
-
         if (new_user.password) {
             new_user.password = await User.hashPassword(new_user.password)
         }
-
-        const updated_user = this.repo.merge(user, new_user)
-        this.repo.save(updated_user)
-        return updated_user
-    }
-
-    delete(name: string): void {
-        const user = this.repo.findOne(name)
-        if (user) this.repo.delete(user)
+        return super.update(name, new_user)
     }
 
     async authenticate(credentials: AuthUserDto): Promise<User> {
