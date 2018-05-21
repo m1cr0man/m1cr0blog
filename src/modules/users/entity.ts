@@ -1,12 +1,9 @@
 import { compare, genSaltSync, hash } from 'bcryptjs'
 import { BaseEntity, JSONData } from '../../fsrepo/entity'
-import { UploadsRepository } from '../uploads/repository'
 
 const salt = genSaltSync(10)
 
 export class User extends BaseEntity {
-    uploads: UploadsRepository
-
     constructor(
         @BaseEntity.Serialize('id')
         public id: string,
@@ -21,7 +18,6 @@ export class User extends BaseEntity {
         public permissions: string[] = []
     ) {
         super()
-        this.uploads = new UploadsRepository(this)
     }
 
     static fromJSON({id, name, token, password, permissions}: JSONData<User>): User {

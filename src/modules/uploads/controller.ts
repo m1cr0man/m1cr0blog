@@ -14,11 +14,10 @@ import {
 } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { Upload } from './entity'
-import { UploadsService } from './service'
-import { AuthedUser } from '../../auth.middleware'
-import { User } from '../users/entity'
+import { UploadsService, UploadsServiceDecorator as Uploads } from './service'
 import { UserService } from '../users/service'
 import { Response as IResponse } from 'express'
+import { UploadsRepository } from './repository'
 
 @ApiUseTags('Uploads')
 @Controller('/api/v1/uploads')
@@ -30,16 +29,18 @@ export class UploadsController {
         // Set up expiry monitor
         // Runs every 5 minutes
         setInterval(() => {
-            for (let user of this.userService.find()) UploadsService.clean(user)
+            for (let user of this.userService.find()) {
+                (new UploadsService(new UploadsRepository(user.id))).clean()
+            }
         }, 1000 * 60 * 5)
     }
 
     @Get()
     @ApiOperation({ title: 'List' })
     list(
-        @AuthedUser() user: User
+        @Uploads() uploads: UploadsService
     ): Upload[] {
-        return UploadsService.find(user)
+        return uploads.find()
     }
 
     @Post()
@@ -47,43 +48,42 @@ export class UploadsController {
     @HttpCode(201)
     @UseInterceptors(FileInterceptor('file', { dest: 'uploads' }))
     async add(
-        @AuthedUser() user: User,
+        @Uploads() uploads: UploadsService,
         @UploadedFile() file: Express.Multer.File, // Express.Multer.File is in global namespace
         @Headers('x-lifespan') lifespan: number | string = 84
     ): Promise<Upload> {
-        return UploadsService.create(user, file, +lifespan)
+        return uploads.create(file, +lifespan)
     }
 
     @Delete(':id')
     @ApiOperation({ title: 'Delete' })
     @HttpCode(204)
     delete(
-        @AuthedUser() user: User,
+        @Uploads() uploads: UploadsService,
         @Param() params: { id: string }
     ): void {
-        return UploadsService.delete(user, params.id)
+        return uploads.delete(params.id)
     }
 
-    @Get(':user/:id')
+    @Get(':userId/:id')
     @ApiOperation({ title: 'View' })
     @HttpCode(200)
     view(
-        @Param() params: { id: string, user: string }
+        @Uploads() uploads: UploadsService,
+        @Param('id') id: string
     ): Upload {
-        const user = this.userService.findOne(params.user)
-        const upload = UploadsService.findOne(user, params.id)
-        return upload
+        return uploads.findOne(id)
     }
 
-    @Get(':user/:id/download')
+    @Get(':userId/:id/download')
     @ApiOperation({ title: 'Download' })
     download(
-        @Param() params: { id: string, user: string },
+        @Uploads() uploads: UploadsService,
+        @Param('id') id: string,
         @Response() res: IResponse
     ): void {
-        const user = this.userService.findOne(params.user)
-        const upload = UploadsService.findOne(user, params.id)
-        return res.sendFile(user.uploads.getPath(upload), {
+        const upload = uploads.findOne(id)
+        return res.sendFile(uploads.repo.getPath(upload), {
             root: '.',
             headers: {
                 'Content-Disposition': `attachment; filename="${upload.filename}"`,

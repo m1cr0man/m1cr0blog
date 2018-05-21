@@ -1,6 +1,5 @@
-import { Component, Inject } from '@nestjs/common'
+import { Component, createRouteParamDecorator } from '@nestjs/common'
 import { Upload } from './entity'
-import { User } from '../users/entity'
 import { BaseService } from '../../fsrepo/service'
 import { UploadsRepository } from './repository'
 
@@ -12,7 +11,7 @@ export class UploadsService extends BaseService<Upload> {
         super()
     }
 
-    async create(user: User, file: Express.Multer.File, lifespan: number = 84): Promise<Upload> {
+    async create(file: Express.Multer.File, lifespan: number = 84): Promise<Upload> {
         const upload = new Upload(
             this.repo.generateId(),
             file.originalname,
@@ -27,12 +26,16 @@ export class UploadsService extends BaseService<Upload> {
         return upload
     }
 
-    clean(user: User) {
+    clean() {
         const currentDate = (new Date()).getTime()
         for (let upload of this.repo.find()) {
             if (upload.lifespan == -1) continue
             upload.date.setHours(upload.date.getHours() + upload.lifespan)
-            if (upload.date.getTime() < currentDate) user.uploads.delete(upload)
+            if (upload.date.getTime() < currentDate) this.repo.delete(upload)
         }
     }
 }
+
+export const UploadsServiceDecorator = createRouteParamDecorator((data, req) =>
+    new UploadsService(new UploadsRepository(req.params.userId || req.user.id))
+)
