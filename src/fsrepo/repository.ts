@@ -16,15 +16,13 @@ function recursiveDelete(fpath: string): void {
 }
 
 export class Repository<Entity extends BaseEntity> {
-    root: string
-    enttype
-    metafile: string = 'data.json'
 
-    constructor(root: string, enttype: { new(...args: any[]): Entity }, metafile?: string) {
-        this.root = root
-        this.enttype = enttype
-        this.metafile = metafile || this.metafile
-
+    constructor(
+        public root: string,
+        public enttype: { new(...args: any[]): Entity, fromJSON(data: any): Entity },
+        public idLength: number = 3,
+        public metafile: string = 'data.json'
+    ) {
         if (!fs.existsSync(root)) fs.mkdirSync(root)
     }
 
@@ -42,9 +40,9 @@ export class Repository<Entity extends BaseEntity> {
         ))
     }
 
-    generateId(ent: Entity): string {
-        const id = Math.random().toString(36).slice(-3)
-        return (fs.existsSync(path.join(this.root, id))) ? this.generateId(ent) : id
+    generateId(): string {
+        const id = Math.random().toString(36).slice(-this.idLength)
+        return (fs.existsSync(path.join(this.root, id))) ? this.generateId() : id
     }
 
     getDir(ent: Entity): string {
@@ -60,7 +58,6 @@ export class Repository<Entity extends BaseEntity> {
     }
 
     save(ent: Entity): boolean {
-        ent.id = this.generateId(ent)
         const dir = this.getDir(ent)
 
         // generateId can be overloaded to return non-unique IDs

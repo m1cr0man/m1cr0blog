@@ -27,7 +27,7 @@ export class UserService {
         if (this.repo.exists(new_user.name)) throw new HttpException('User name taken', 400)
 
         const user = new User(
-            this.repo.generateId(new_user),
+            this.repo.generateId(),
             new_user.name,
             randomBytes(24).toString('hex'),
             await User.hashPassword(new_user.password)
