@@ -1,5 +1,5 @@
 import { MiddlewaresConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { AuthMiddleware } from '../../auth.middleware'
+import { AuthMiddleware } from './middleware'
 import { UserController } from './controller'
 import { UserService } from './service'
 import { UserRepository } from './repository'

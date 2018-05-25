@@ -7,8 +7,8 @@ import {
     NestMiddleware,
 } from '@nestjs/common'
 import { NextFunction, Request, Response } from 'express'
-import { User } from './modules/users/entity'
-import { UserService } from './modules/users/service'
+import { User } from './entity'
+import { UserService } from './service'
 
 export const AuthedUser = createRouteParamDecorator((data, req) => req.user)
 
