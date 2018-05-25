@@ -5,7 +5,6 @@ import {
     Get,
     Headers,
     HttpCode,
-    Inject,
     Param,
     Post,
     Response,
@@ -15,26 +14,11 @@ import {
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { Upload } from './entity'
 import { UploadsService, UploadsServiceDecorator as Uploads } from './service'
-import { UserService } from '../users/service'
 import { Response as IResponse } from 'express'
-import { UploadsRepository } from './repository'
 
 @ApiUseTags('Uploads')
 @Controller('/api/v1/uploads')
 export class UploadsController {
-    constructor(
-        @Inject(UserService)
-        private readonly userService: UserService,
-    ) {
-        // Set up expiry monitor
-        // Runs every 5 minutes
-        setInterval(() => {
-            for (let user of this.userService.find()) {
-                (new UploadsService(new UploadsRepository(user.id))).clean()
-            }
-        }, 1000 * 60 * 5)
-    }
-
     @Get()
     @ApiOperation({ title: 'List' })
     list(
@@ -60,9 +44,9 @@ export class UploadsController {
     @HttpCode(204)
     delete(
         @Uploads() uploads: UploadsService,
-        @Param() params: { id: string }
+        @Param('id') id: string
     ): void {
-        return uploads.delete(params.id)
+        return uploads.delete(id)
     }
 
     @Get(':userId/:id')

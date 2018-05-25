@@ -7,6 +7,7 @@ import { UserRepository } from './repository'
 @Module({
     controllers: [UserController],
     components: [UserService, UserRepository],
+    exports: [UserService, UserRepository]
 })
 export class UserModule implements NestModule {
     configure(consumer: MiddlewaresConsumer): void {
