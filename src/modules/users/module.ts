@@ -12,7 +12,6 @@ import { UserRepository } from './repository'
 export class UserModule implements NestModule {
     configure(consumer: MiddlewaresConsumer): void {
         consumer.apply(AuthMiddleware)
-        .with('users')
         .forRoutes(
             { path: 'api/v1/users/manage', method: RequestMethod.ALL },
         )

@@ -53,3 +53,21 @@ export class AuthMiddleware implements NestMiddleware {
         }
     }
 }
+
+@Middleware()
+export class UserResolveMiddleware implements NestMiddleware {
+    constructor(
+        @Inject(UserService)
+        private readonly userService: UserService,
+    ) {}
+
+    resolve(endpoint: string): ExpressMiddleware {
+        return (req: Request, res: Response, next: NextFunction): void => {
+            const user = this.userService.findOne(req.params.userId)
+            if (!user) throw new HttpException('User not found', 404)
+
+            req.user = user
+            next()
+        }
+    }
+}

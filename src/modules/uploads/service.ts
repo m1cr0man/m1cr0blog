@@ -37,5 +37,5 @@ export class UploadsService extends BaseService<Upload> {
 }
 
 export const UploadsServiceDecorator = createRouteParamDecorator((data, req) =>
-    new UploadsService(new UploadsRepository(req.params.userId || req.user.id))
+    new UploadsService(req.user.uploads)
 )

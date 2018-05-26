@@ -1,5 +1,5 @@
 import { Inject, MiddlewaresConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { AuthMiddleware } from '../users/middleware'
+import { AuthMiddleware, UserResolveMiddleware } from '../users/middleware'
 import { UploadsController } from './controller'
 import { UserService } from '../users/service'
 import { UploadsRepository } from './repository'
@@ -26,10 +26,14 @@ export class UploadsModule implements NestModule {
 
     configure(consumer: MiddlewaresConsumer): void {
         consumer.apply(AuthMiddleware)
-        .with('users')
         .forRoutes(
             { path: 'api/v1/uploads', method: RequestMethod.ALL },
             { path: 'api/v1/uploads/:id', method: RequestMethod.DELETE }
+        )
+
+        consumer.apply(UserResolveMiddleware)
+        .forRoutes(
+            { path: 'api/v1/uploads/:userId/:id', method: RequestMethod.ALL }
         )
     }
 }
