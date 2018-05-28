@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common'
 import * as fs from 'fs'
 import * as path from 'path'
 import { BaseEntity } from './entity'
@@ -15,13 +16,26 @@ function recursiveDelete(fpath: string): void {
     }
 }
 
-export class Repository<Entity extends BaseEntity> {
+export class Join<Entity extends BaseEntity> {
+    constructor(
+        public repo: Repository<any>,
+        public field: keyof Entity
+    ) {}
 
+    load(id: string): any {
+        const joinData = this.repo.findOne(id)
+        if (!joinData) throw new HttpException(`Parent ${this.field} entity not found`, 404)
+        return joinData
+    }
+}
+
+export class Repository<Entity extends BaseEntity> {
     constructor(
         public root: string,
         public enttype: { new(...args: any[]): Entity, fromJSON(data: any): Entity },
         public idLength: number = 3,
-        public metafile: string = 'data.json'
+        public metafile: string = 'data.json',
+        public joins: Join<Entity>[] = []
     ) {
         if (!fs.existsSync(root)) fs.mkdirSync(root)
     }
@@ -29,15 +43,22 @@ export class Repository<Entity extends BaseEntity> {
     protected writeData(ent: Entity) {
         fs.writeFileSync(
             this.getMetaPath(ent),
-            JSON.stringify(ent.toJSON(true))
+            JSON.stringify(ent.toJSON(true, false))
         )
     }
 
     protected readData(id: string): Entity {
-        return this.enttype.fromJSON(JSON.parse(
-            fs.readFileSync(path.join(this.root, id, this.metafile)
-            ).toString('utf-8')
-        ))
+        const jsonData = JSON.parse(
+            fs.readFileSync(path.join(this.root, id, this.metafile))
+            .toString('utf-8')
+        )
+        // noinspection JSMismatchedCollectionQueryUpdate
+        const joinData: {[index: string]: any} = {}
+        this.joins.map(x => joinData[x.field] = x.load(id))
+        return this.enttype.fromJSON({
+            ...jsonData,
+            ...joinData
+        })
     }
 
     generateId(): string {

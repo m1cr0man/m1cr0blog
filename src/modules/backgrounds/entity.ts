@@ -1,7 +1,11 @@
 import { BaseEntity, JSONData } from '../../fsrepo/entity'
+import { Upload } from '../uploads/entity'
 
 export class Background extends BaseEntity {
     constructor(
+        @BaseEntity.Serialize('upload')
+        @BaseEntity.Join('upload')
+        public upload: Upload,
         @BaseEntity.Serialize('id')
         public id: string,
         @BaseEntity.Serialize('tags')
@@ -14,7 +18,7 @@ export class Background extends BaseEntity {
         super()
     }
 
-    static fromJSON({id, tags, views, exclude}: JSONData<Background>): Background {
-        return new Background(id, tags, views, exclude)
+    static fromJSON({upload, id, tags, views, exclude}: JSONData<Background>): Background {
+        return new Background(upload, id, tags, views, exclude)
     }
 }

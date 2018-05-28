@@ -23,8 +23,8 @@ export class User extends BaseEntity {
         public permissions: string[] = []
     ) {
         super()
-        this.uploads = new UploadsRepository(this.id)
-        this.backgrounds = new BackgroundsRepository(this.id)
+        this.uploads = new UploadsRepository(this)
+        this.backgrounds = new BackgroundsRepository(this, this.uploads)
     }
 
     static fromJSON({id, name, token, password, permissions}: JSONData<User>): User {

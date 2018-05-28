@@ -19,7 +19,7 @@ export class UploadsModule implements NestModule {
         // Runs every 5 minutes
         setInterval(() => {
             for (let user of userService.find()) {
-                (new UploadsService(new UploadsRepository(user.id))).clean()
+                (new UploadsService(new UploadsRepository(user))).clean()
             }
         }, 1000 * 60 * 5)
     }

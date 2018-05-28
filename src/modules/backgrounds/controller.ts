@@ -3,9 +3,6 @@ import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { Background } from './entity'
 import { BackgroundsService, BackgroundsServiceDecorator as Backgrounds } from './service'
 
-//TODO test
-//TODO figure out how to join the uploads and backgrounds data
-
 @ApiUseTags('Backgrounds')
 @Controller('/api/v1/backgrounds')
 export class BackgroundsController {
