@@ -11,6 +11,7 @@ async function bootstrap(): Promise<void> {
         .setDescription('Backend REST API for m1cr0man\'s blog')
         .setVersion('1.0')
         .addTag('Users', 'User management system')
+        .addBearerAuth()
         .build()
     const document = SwaggerModule.createDocument(app, options)
     SwaggerModule.setup('api/swagger', app, document)

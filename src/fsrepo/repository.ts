@@ -54,17 +54,13 @@ export class Repository<Entity extends BaseEntity> {
     }
 
     exists(id: string): boolean {
-        return fs.existsSync(path.join(this.root, id))
+        return fs.existsSync(path.join(this.root, id, this.metafile))
     }
 
     save(ent: Entity): boolean {
         const dir = this.getDir(ent)
 
-        // generateId can be overloaded to return non-unique IDs
-        // Make sure that the path doesn't already exist
-        // TODO handle the false return
-        if (fs.existsSync(dir)) return false
-        fs.mkdirSync(dir)
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir)
 
         this.writeData(ent)
 
@@ -89,6 +85,8 @@ export class Repository<Entity extends BaseEntity> {
     }
 
     find(): Entity[] {
-        return fs.readdirSync(this.root).map(x => this.readData(x))
+        return fs.readdirSync(this.root)
+            .filter(x => this.exists(x))
+            .map(x => this.readData(x))
     }
 }
