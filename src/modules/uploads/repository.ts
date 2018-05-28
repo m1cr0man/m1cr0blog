@@ -1,14 +1,12 @@
-import { Repository } from '../../fsrepo/repository'
-import { Upload } from './entity'
-import { existsSync, renameSync } from 'fs'
+import { renameSync } from 'fs'
 import { join as j } from 'path'
-import { HttpException } from '@nestjs/core'
+import { Repository } from '../../fsrepo/repository'
 import { User } from '../users/entity'
+import { Upload } from './entity'
 
 export class UploadsRepository extends Repository<Upload> {
 
     constructor(user: User) {
-        if (!existsSync(j('users', user.id))) throw new HttpException('User not found', 404)
         super(j('users', user.id, 'uploads'), Upload)
     }
 

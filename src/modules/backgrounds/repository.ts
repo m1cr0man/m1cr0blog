@@ -1,5 +1,4 @@
-import { HttpException } from '@nestjs/common'
-import { existsSync, unlinkSync } from 'fs'
+import { unlinkSync } from 'fs'
 import { join as j } from 'path'
 import { Join, Repository } from '../../fsrepo/repository'
 import { UploadsRepository } from '../uploads/repository'
@@ -13,7 +12,6 @@ export class BackgroundsRepository extends Repository<Background> {
         user: User,
         uploads: UploadsRepository
     ) {
-        if (!existsSync(j('users', user.id))) throw new HttpException('User not found', 404)
         const uploadJoin = new Join<Background>(uploads, 'upload')
         super(j('users', user.id, 'uploads'), Background, 3, 'bgdata.json', [uploadJoin])
         this.uploads = uploads

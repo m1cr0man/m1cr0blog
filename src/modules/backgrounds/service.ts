@@ -1,4 +1,4 @@
-import { Component, createRouteParamDecorator, HttpException } from '@nestjs/common'
+import { Component, createRouteParamDecorator } from '@nestjs/common'
 import { BaseService } from '../../fsrepo/service'
 import { Background } from './entity'
 import { BackgroundsRepository } from './repository'
@@ -11,9 +11,8 @@ export class BackgroundsService extends BaseService<Background> {
         super()
     }
 
-    async create(id: string, tags: string[]): Promise<Background> {
+    create(id: string, tags: string[]): Background {
         const upload = this.repo.uploads.findOne(id)
-        if (!upload) throw new HttpException('Upload not found', 404)
 
         // Set lifespan of upload to -1 so it doesn't get cleaned up
         upload.lifespan = -1

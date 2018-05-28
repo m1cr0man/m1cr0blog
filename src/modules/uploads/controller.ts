@@ -31,11 +31,11 @@ export class UploadsController {
     @ApiOperation({ title: 'Upload' })
     @HttpCode(201)
     @UseInterceptors(FileInterceptor('file', { dest: 'uploads' }))
-    async add(
+    add(
         @Uploads() uploads: UploadsService,
         @UploadedFile() file: Express.Multer.File, // Express.Multer.File is in global namespace
         @Headers('x-lifespan') lifespan: number | string = 84
-    ): Promise<Upload> {
+    ): Upload {
         return uploads.create(file, +lifespan)
     }
 

@@ -23,9 +23,7 @@ export class Join<Entity extends BaseEntity> {
     ) {}
 
     load(id: string): any {
-        const joinData = this.repo.findOne(id)
-        if (!joinData) throw new HttpException(`Parent ${this.field} entity not found`, 404)
-        return joinData
+        return this.repo.findOne(id)
     }
 }
 
@@ -101,8 +99,9 @@ export class Repository<Entity extends BaseEntity> {
         recursiveDelete(this.getDir(ent))
     }
 
-    findOne(id: string): Entity | false {
-        return typeof id == 'string' && this.exists(id) && this.readData(id)
+    findOne(id: string): Entity {
+        if (!this.exists(id)) throw new HttpException(`Entity ${id} not found`, 404)
+        return this.readData(id)
     }
 
     find(): Entity[] {

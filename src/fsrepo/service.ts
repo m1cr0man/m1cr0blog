@@ -1,4 +1,3 @@
-import { HttpException } from '@nestjs/common'
 import { BaseEntity } from './entity'
 import { Repository } from './repository'
 
@@ -10,9 +9,7 @@ export abstract class BaseService<Entity extends BaseEntity> {
     }
 
     findOne(id: Entity['id']): Entity {
-        const ent = this.repo.findOne(id)
-        if (!ent) throw new HttpException('Entity not found', 404)
-        return ent
+        return this.repo.findOne(id)
     }
 
     abstract create(...any: any[]): Entity | Promise<Entity>
@@ -26,7 +23,8 @@ export abstract class BaseService<Entity extends BaseEntity> {
     }
 
     delete(id: Entity['id']): void {
-        const ent = this.repo.findOne(id)
-        if (ent) this.repo.delete(ent)
+        if (this.repo.exists(id)) {
+            this.repo.delete(this.repo.findOne(id))
+        }
     }
 }

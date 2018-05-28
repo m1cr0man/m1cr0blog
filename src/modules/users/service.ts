@@ -38,9 +38,12 @@ export class UserService extends BaseService<User> {
     }
 
     async authenticate(credentials: AuthUserDto): Promise<User> {
+        if (!this.repo.exists(credentials.name))
+            throw new HttpException('Incorrect username/password', 401)
+
         const user = this.repo.findOne(credentials.name)
 
-        if (!user || !await user.checkPassword(credentials.password)) {
+        if (!await user.checkPassword(credentials.password)) {
             throw new HttpException('Incorrect username/password', 401)
         }
 

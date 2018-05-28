@@ -63,10 +63,7 @@ export class UserResolveMiddleware implements NestMiddleware {
 
     resolve(endpoint: string): ExpressMiddleware {
         return (req: Request, res: Response, next: NextFunction): void => {
-            const user = this.userService.findOne(req.params.userId)
-            if (!user) throw new HttpException('User not found', 404)
-
-            req.user = user
+            req.user = this.userService.findOne(req.params.userId)
             next()
         }
     }

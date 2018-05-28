@@ -11,7 +11,7 @@ export class UploadsService extends BaseService<Upload> {
         super()
     }
 
-    async create(file: Express.Multer.File, lifespan: number = 84): Promise<Upload> {
+    create(file: Express.Multer.File, lifespan: number = 84): Upload {
         const upload = new Upload(
             this.repo.generateId(),
             file.originalname,

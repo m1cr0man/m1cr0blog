@@ -17,10 +17,10 @@ export class BackgroundsController {
     @Post()
     @ApiOperation({ title: 'Add' })
     @HttpCode(201)
-    async add(
+    add(
         @Backgrounds() service: BackgroundsService,
         @Body() addBgDto: AddBackgroundDto
-    ): Promise<Background> {
+    ): Background {
         return service.create(addBgDto.uploadId, addBgDto.tags || [])
     }
 
