@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import { AuthGuard } from '../users'
 import { Background } from './entity'
 import { BackgroundsService, BackgroundsServiceDecorator as Backgrounds } from './service'
 
 @ApiUseTags('Backgrounds')
+@UseGuards(AuthGuard)
 @Controller('/api/v1/backgrounds')
 export class BackgroundsController {
     @Get()

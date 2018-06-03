@@ -1,9 +1,9 @@
-import { Component, createRouteParamDecorator } from '@nestjs/common'
+import { createParamDecorator, Injectable } from '@nestjs/common'
 import { BaseService } from '../../fsrepo/service'
 import { Background } from './entity'
 import { BackgroundsRepository } from './repository'
 
-@Component()
+@Injectable()
 export class BackgroundsService extends BaseService<Background> {
     constructor(
         readonly repo: BackgroundsRepository
@@ -45,6 +45,6 @@ export class BackgroundsService extends BaseService<Background> {
     }
 }
 
-export const BackgroundsServiceDecorator = createRouteParamDecorator((data, req) =>
+export const BackgroundsServiceDecorator = createParamDecorator((data, req) =>
     new BackgroundsService(req.user.backgrounds)
 )

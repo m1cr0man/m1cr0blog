@@ -12,19 +12,20 @@
   "author": "m1cr0man",
   "license": "ISC",
   "dependencies": {
-    "@nestjs/common": "^4.6.6",
-    "@nestjs/core": "^4.6.6",
-    "@nestjs/swagger": "^1.3.1",
+    "@nestjs/common": "^5.0.1",
+    "@nestjs/core": "^5.0.1",
+    "@nestjs/swagger": "^2.0.2",
     "@types/bcryptjs": "^2.4.1",
     "@types/multer": "^1.3.6",
-    "@types/node": "^9.6.16",
+    "@types/node": "^9.6.19",
     "bcryptjs": "^2.4.3",
+    "hbs": "^4.0.1",
     "reflect-metadata": "^0.1.12",
-    "rxjs": "^5.5.10",
-    "typescript": "^2.8.3"
+    "rxjs": "^6.2.0",
+    "typescript": "^2.9.1"
   },
   "devDependencies": {
-    "nodemon": "^1.17.4",
+    "nodemon": "^1.17.5",
     "source-map-support": "^0.5.6"
   }
 }

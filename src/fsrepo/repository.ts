@@ -52,7 +52,7 @@ export class Repository<Entity extends BaseEntity> {
         )
         // noinspection JSMismatchedCollectionQueryUpdate
         const joinData: {[index: string]: any} = {}
-        this.joins.map(x => joinData[x.field] = x.load(id))
+        this.joins.map(x => joinData[<string>x.field] = x.load(id))
         return this.enttype.fromJSON({
             ...jsonData,
             ...joinData
