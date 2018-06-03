@@ -1,9 +1,9 @@
-import { Component, createRouteParamDecorator } from '@nestjs/common'
-import { Upload } from './entity'
+import { createParamDecorator, Injectable } from '@nestjs/common'
 import { BaseService } from '../../fsrepo/service'
+import { Upload } from './entity'
 import { UploadsRepository } from './repository'
 
-@Component()
+@Injectable()
 export class UploadsService extends BaseService<Upload> {
     constructor(
         readonly repo: UploadsRepository,
@@ -36,6 +36,6 @@ export class UploadsService extends BaseService<Upload> {
     }
 }
 
-export const UploadsServiceDecorator = createRouteParamDecorator((data, req) =>
+export const UploadsServiceDecorator = createParamDecorator((data, req) =>
     new UploadsService(req.user.uploads)
 )

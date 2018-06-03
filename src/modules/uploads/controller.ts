@@ -9,17 +9,21 @@ import {
     Post,
     Response,
     UploadedFile,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
-import { Upload } from './entity'
-import { UploadsService, UploadsServiceDecorator as Uploads } from './service'
 import { Response as IResponse } from 'express'
+import { AuthGuard } from '../users'
+import { Upload } from './entity'
+import { UploadsPipe } from './pipe'
+import { UploadsService, UploadsServiceDecorator as Uploads } from './service'
 
 @ApiUseTags('Uploads')
 @Controller('/api/v1/uploads')
 export class UploadsController {
     @Get()
+    @UseGuards(AuthGuard)
     @ApiOperation({ title: 'List' })
     list(
         @Uploads() uploads: UploadsService
@@ -28,6 +32,7 @@ export class UploadsController {
     }
 
     @Post()
+    @UseGuards(AuthGuard)
     @ApiOperation({ title: 'Upload' })
     @HttpCode(201)
     @UseInterceptors(FileInterceptor('file', { dest: 'uploads' }))
@@ -40,6 +45,7 @@ export class UploadsController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard)
     @ApiOperation({ title: 'Delete' })
     @HttpCode(204)
     delete(
@@ -53,7 +59,7 @@ export class UploadsController {
     @ApiOperation({ title: 'View' })
     @HttpCode(200)
     view(
-        @Uploads() uploads: UploadsService,
+        @Param('userId', UploadsPipe) uploads: UploadsService,
         @Param('id') id: string
     ): Upload {
         return uploads.findOne(id)
@@ -62,7 +68,7 @@ export class UploadsController {
     @Get(':userId/:id/download')
     @ApiOperation({ title: 'Download' })
     download(
-        @Uploads() uploads: UploadsService,
+        @Param('userId', UploadsPipe) uploads: UploadsService,
         @Param('id') id: string,
         @Response() res: IResponse
     ): void {

@@ -1,16 +1,17 @@
-import { Inject, MiddlewaresConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { AuthMiddleware, UserResolveMiddleware } from '../users/middleware'
+import { Inject, Module } from '@nestjs/common'
+import { UserModule, UserService } from '../users'
 import { UploadsController } from './controller'
-import { UserService } from '../users/service'
+import { UploadsPipe } from './pipe'
 import { UploadsRepository } from './repository'
 import { UploadsService } from './service'
-import { UserModule } from '../users/module'
 
 @Module({
     controllers: [UploadsController],
-    imports: [UserModule]
+    providers: [UploadsPipe],
+    imports: [UserModule],
+    exports: [UploadsPipe],
 })
-export class UploadsModule implements NestModule {
+export class UploadsModule {
     constructor(
         @Inject(UserService)
         userService: UserService
@@ -22,18 +23,5 @@ export class UploadsModule implements NestModule {
                 (new UploadsService(new UploadsRepository(user))).clean()
             }
         }, 1000 * 60 * 5)
-    }
-
-    configure(consumer: MiddlewaresConsumer): void {
-        consumer.apply(AuthMiddleware)
-        .forRoutes(
-            { path: 'api/v1/uploads', method: RequestMethod.ALL },
-            { path: 'api/v1/uploads/:id', method: RequestMethod.DELETE }
-        )
-
-        consumer.apply(UserResolveMiddleware)
-        .forRoutes(
-            { path: 'api/v1/uploads/:userId/:id', method: RequestMethod.ALL }
-        )
     }
 }
