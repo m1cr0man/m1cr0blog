@@ -1,11 +1,11 @@
-import { Component, HttpException, Inject } from '@nestjs/common'
+import { HttpException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { randomBytes } from 'crypto'
-import { User } from './entity'
-import { AuthUserDto, CreateUserDto } from './dtos'
-import { UserRepository } from './repository'
 import { BaseService } from '../../fsrepo/service'
+import { AuthUserDto, CreateUserDto } from './dtos'
+import { User } from './entity'
+import { UserRepository } from './repository'
 
-@Component()
+@Injectable()
 export class UserService extends BaseService<User> {
     constructor(
         @Inject(UserRepository)
@@ -39,12 +39,12 @@ export class UserService extends BaseService<User> {
 
     async authenticate(credentials: AuthUserDto): Promise<User> {
         if (!this.repo.exists(credentials.name))
-            throw new HttpException('Incorrect username/password', 401)
+            throw new UnauthorizedException('Incorrect username/password')
 
         const user = this.repo.findOne(credentials.name)
 
         if (!await user.checkPassword(credentials.password)) {
-            throw new HttpException('Incorrect username/password', 401)
+            throw new UnauthorizedException('Incorrect username/password')
         }
 
         return user
@@ -53,7 +53,7 @@ export class UserService extends BaseService<User> {
     authenticateByToken(token: string): User {
         const user = this.repo.findOneByToken(token)
         if (!user) {
-            throw new HttpException('Invalid token', 401)
+            throw new UnauthorizedException('Invalid token')
         }
         return user
     }

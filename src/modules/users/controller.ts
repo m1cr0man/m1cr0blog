@@ -1,9 +1,22 @@
-import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Patch, Post, Response, } from '@nestjs/common'
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    Inject,
+    Param,
+    Patch,
+    Post,
+    Response,
+    UseGuards,
+} from '@nestjs/common'
 import { ApiImplicitBody, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger'
-import { UserService } from './service'
-import { User } from './entity'
-import { AuthUserDto, CreateUserDto } from './dtos'
 import { Response as IResponse } from 'express'
+import { AuthUserDto, CreateUserDto } from './dtos'
+import { User } from './entity'
+import { AuthGuard } from './guard'
+import { UserService } from './service'
 
 @ApiUseTags('Users')
 @Controller('/api/v1/users')
@@ -14,11 +27,13 @@ export class UserController {
     ) {}
 
     @Get('manage')
+    @UseGuards(AuthGuard)
     list(): User[] {
         return this.service.find()
     }
 
     @Post('manage')
+    @UseGuards(AuthGuard)
     @ApiOperation({ title: 'Add a user' })
     @HttpCode(201)
     add(
@@ -46,6 +61,7 @@ export class UserController {
     }
 
     @Get('manage/:name')
+    @UseGuards(AuthGuard)
     view(
         @Param() params: { name: string },
     ): User {
@@ -53,6 +69,7 @@ export class UserController {
     }
 
     @Patch('manage/:name')
+    @UseGuards(AuthGuard)
     @HttpCode(201)
     patch(
         @Param() params: { name: string },
@@ -62,6 +79,7 @@ export class UserController {
     }
 
     @Delete('manage/:name')
+    @UseGuards(AuthGuard)
     @HttpCode(204)
     delete(
         @Param() params: { name: string },
