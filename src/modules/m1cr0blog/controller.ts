@@ -1,9 +1,10 @@
-import { Get, Controller } from '@nestjs/common'
+import { Controller, Get, Render } from '@nestjs/common'
 
 @Controller()
 export class M1cr0blogController {
     @Get()
-    root(): string {
-        return 'Hello world!'
+    @Render('index')
+    root() {
+        return {message: 'Hello world!'}
     }
 }

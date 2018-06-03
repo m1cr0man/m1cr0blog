@@ -5,6 +5,11 @@ import { M1cr0blogModule } from './modules/m1cr0blog/module'
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(M1cr0blogModule, { cors: true })
 
+    // Set up static content rendering
+    app.useStaticAssets(__dirname + '/static')
+    app.setBaseViewsDir(__dirname + '/views')
+    app.setViewEngine('hbs')
+
     // Set up Swagger
     const options = new DocumentBuilder()
         .setTitle('M1cr0blog API')

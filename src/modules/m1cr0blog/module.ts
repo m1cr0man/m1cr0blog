@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
+import { BackgroundsModule } from '../backgrounds'
+import { UploadsModule } from '../uploads'
+import { UserModule } from '../users'
 import { M1cr0blogController } from './controller'
-import { UserModule } from '../users/module'
-import { UploadsModule } from '../uploads/module'
-import { BackgroundsModule } from '../backgrounds/module'
 
 @Module({
     controllers: [M1cr0blogController],
