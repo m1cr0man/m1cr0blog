@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css?family=Signika+Negative:400,700');
+
+html, body {
+	width: 100%;
+	height: 100%;
+	background-color: mintcream;
+}
+
+hr {
+	clear: both;
+	border: 1px solid #2b8961;
+}
+
+
+/* Global nav bar */
+
+nav {
+	font-family: 'Signika Negative', sans-serif;
+	background-color: #2b8961;
+	/*background-color: #CED9D5;*/
+	border-bottom: #003214 6px solid;
+}
+
+	nav a:not(#logo) {
+		font-size: 1.25em;
+		font-weight: 700;
+		text-decoration: none;
+		color: #e9e7c7;
+		/*color: #404040;*/
+	}
+
+
+/* Global footer */
+
+footer {
+	text-align: center;
+	background-color: #DDE6E1;
+	color: #696969;
+}
+
+	footer a {
+		text-decoration: none;
+		color: black;
+	}
+
+	footer a:hover { text-decoration: underline; }
+
+
+/* Header logo */
+
+#logo {
+	font-size: 0.5em;
+	border-radius: 0 50px 50px 0;
+}
+
+#logo, .pure-menu-item a:hover { background-color: #003214; }
+
+.pure-menu-list {
+	width: 100%;
+}
+
+
+/* Generic alignment classes */
+
+.padded { padding: 2em; }
+
+.centered { text-align: center; }
+
+.hidden { display: none; }
+
+.big-image {
+	max-width: 100%;
+	max-height: 480px;
+	text-align: center;
+}
+
+
+/* PureCSS extra button colours */
+
+.pure-button-success, .pure-button-secondary, .pure-button-warning, .pure-button-error {
+	color: white !important;
+	border-radius: 4px;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.pure-button-success { background-color: rgb(28, 184, 65) !important; }
+
+.pure-button-error { background-color: rgb(202, 60, 60) !important; }
+
+.pure-button-warning { background-color: rgb(223, 117, 20) !important; }
+
+.pure-button-secondary { background-color: rgb(66, 184, 221) !important; }
+
+
+/* PureCSS alignment fix */
+
+[class*='pure-u'] { box-sizing: border-box; }
+
+
+/* Twitter widget alignment fix */
+
+#twitter {
+	max-width: 360px;
+	margin: 0 auto;
+}
+
+
+/* Index blog posts */
+
+.blog-body, .blog-post {
+	width: 75%;
+	margin: 0 auto;
+	padding: 1em;
+	border-left: 3px solid #ebf9f3;
+	border-right: 3px solid #ebf9f3;
+	position: relative;
+	clear: both;
+	background-color: white;
+}
+
+.blog-body img, .blog-post img {
+	box-sizing: border-box;
+	border: 2px solid lightgray;
+}
+
+.blog-post aside {
+	margin-top: 1em;
+	position: absolute;
+	right: -8.3333%;
+	border: 1px solid lightgray;
+}
+
+.blog-post header {
+	text-align: left;
+	position: relative;
+	width: 100%;
+}
+
+	.blog-post header h1 {
+		margin: 0 5em 0 0;
+	}
+
+	.blog-post header time {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		color: #003214;
+	}
+
+.blog-post .primary-image {
+	max-width: 100%;
+	max-height: 600px;
+	overflow: hidden;
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+	.blog-post .primary-image img {
+		max-width: 100%;
+		max-height: 600px;
+		vertical-align: top;
+	}
+
+.blog-post div {
+	width: 90%;
+	margin: 1em 0 0 5%;
+	display: inline-block;
+	border-top: 2px solid lightgray;
+}
+
+	.blog-post h2, .blog-post h3, .blog-post h4 {
+		clear: both;
+	}
+
+.blog-post div img, .blog-body div img {
+	float: left;
+	max-height: 384px;
+	max-width: 40%;
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 1em 1em 0;
+}
+
+/* Index next articles */
+
+.next-article {
+	width: 90%;
+	height: 256px;
+	margin: 1em auto;
+	border: 2px solid lightgray;
+	display: block;
+	position: relative;
+	background-size: cover;
+	background-position: center center;
+}
+
+.next-article:hover { border: 2px solid #2b8961; }
+
+.next-article h3 {
+	width: 100%;
+	margin: 0;
+	padding: 0.1em 0.25em;
+	position: absolute;
+	bottom: 0;
+	box-sizing: border-box;
+	color: #e9e7c7;
+	text-align: center;
+	text-decoration: none;
+	background-color: rgba(43, 137, 97, 0.5);
+}
+
+/* Post editor - File Upload Gallery */
+
+#uploader-gallery div {
+	width: 45%;
+	background-color: rgba(200, 200, 200, 0.6);
+	padding: 1em;
+	min-height: 128px;
+	margin-bottom: 1em;
+	border-radius: 5px;
+	display: inline-block;
+	margin-right: 1%;
+	word-wrap: break-word;
+}
+
+	#uploader-gallery a {
+		margin-right: 1em;
+		float: left;
+	}
+
+	#uploader-gallery img {
+		max-height: 128px;
+	}
+
+
+/* Upload viewer */
+
+.upload header {
+	text-align: center;
+	position: relative;
+	width: 100%;
+}
+
+	.upload header h1 {
+		margin-bottom: 0.5em;
+	}
+
+	.upload header time {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		color: #003214;
+	}
+
+	.upload header b {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		color: #003214;
+	}
+
+.upload > p {
+	text-align: center;
+	margin: 0 auto;
+	width: auto;
+}
+
+.upload img {
+	max-width: 100%;
+}
+
+/* Fix for vjs alignment */
+#video {
+	width: auto;
+	margin: 0 auto;
+	max-width: 720px;
+}
+
+/* Dirty solution to oversized twitter posts */
+#twitter {
+	max-height: 250px;
+	overflow-y: scroll;
+}

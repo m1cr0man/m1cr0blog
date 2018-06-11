@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import * as hbs from 'hbs'
 import { M1cr0blogModule } from './modules/m1cr0blog/module'
 
 async function bootstrap(): Promise<void> {
@@ -9,6 +10,11 @@ async function bootstrap(): Promise<void> {
     app.useStaticAssets(__dirname + '/static')
     app.setBaseViewsDir(__dirname + '/views')
     app.setViewEngine('hbs')
+    hbs.registerPartials(__dirname + '/views/partials')
+    hbs.registerHelper('unlessEquals', function(arg1, arg2, options) {
+        //@ts-ignore
+        return (arg1 != arg2) ? options.fn(this) : options.inverse(this);
+    });
 
     // Set up Swagger
     const options = new DocumentBuilder()

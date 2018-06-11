@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "debug": "tsc -w & nodemon --inspect dist/index.js",
     "prestart": "npm run build",
-    "prebuild": "[ ! -e dist/views ] && ln -s \"`pwd`/src/views\" dist/views || true",
+    "prebuild": "([ ! -e dist/static ] && ln -s \"`pwd`/src/static\" dist/static || true) && ([ ! -e dist/views ] && ln -s \"`pwd`/src/views\" dist/views || true)",
     "build": "tsc"
   },
   "author": "m1cr0man",
