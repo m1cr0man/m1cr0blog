@@ -33,4 +33,11 @@ export class BlogsService extends BaseService<Blog> {
         blog.published = true
         this.repo.save(blog)
     }
+
+    findLatest(): Blog | null {
+        const blogs = this.find()
+        return blogs.reduce((last: null | Blog, blog: Blog) =>
+            (!last || last.timestamp > blog.timestamp) && last || blog,
+            null)
+    }
 }
