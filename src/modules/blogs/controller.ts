@@ -9,7 +9,7 @@ import { BlogsService } from './service'
 @ApiUseTags('Blogs')
 @UseGuards(AuthGuard)
 @Controller('/api/v1/blogs')
-export class UploadsController {
+export class BlogsController {
     constructor(
         @Inject(BlogsService)
         private readonly service: BlogsService
