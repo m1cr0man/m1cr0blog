@@ -20,7 +20,6 @@ export class BlogsService extends BaseService<Blog> {
             newBlog.url,
             newBlog.title,
             new Date(newBlog.timestamp),
-            false,
             newBlog.markdown
         )
         this.repo.save(blog)

@@ -11,19 +11,21 @@ export class Blog extends BaseEntity {
         public title: string,
         @BaseEntity.Serialize('timestamp')
         public timestamp: Date,
-        @BaseEntity.Serialize('published')
-        public published: boolean = false,
         @BaseEntity.Serialize('markdown')
         @BaseEntity.Hide('markdown')
         public markdown: string,
+        @BaseEntity.Serialize('image')
+        public image?: string,
+        @BaseEntity.Serialize('published')
+        public published: boolean = false,
         @BaseEntity.Serialize('tags')
         public tags: string[] = []
     ) {
         super()
     }
 
-    static fromJSON({id, url, title, timestamp, published, markdown, tags}: JSONData<Blog>): Blog {
+    static fromJSON({id, url, title, timestamp, markdown, published, image, tags}: JSONData<Blog>): Blog {
         return new Blog(id, url, title, new Date(timestamp),
-            published, markdown, tags)
+            markdown, image, published, tags)
     }
 }

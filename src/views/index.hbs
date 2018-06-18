@@ -1,3 +1,58 @@
 {{> header }}
-			{{ message }}
+			<article class="blog-body blog-post">
+				<header>
+					<h1>{{ blog.title }}</h1>
+					<time>{{ blog.timestamp }}</time>
+				</header>
+
+				<hr>
+
+				<figure class="primary-image">
+					<a href="/{{ blog.url }}/{{ blog.image }}">
+						<img src="/{{ blog.url }}/{{ blog.image }}" alt="{{ blog.title }}">
+					</a>
+				</figure>
+
+				<div>
+					{{ blog.markdown }}
+				</div>
+			</article>
+
+			<section class="blog-body pure-g">
+				<div class="pure-u-1 pure-u-xl-14-24">
+					<header>
+						<h2>Comments</h2>
+						<hr>
+					</header>
+					<div id="disqus_thread">
+						<noscript>You&apos;ll need to enable Javascript to see <a href="https://disqus.com/?ref_noscript">Disqus Comments.</a></noscript>
+					</div>
+				</div>
+
+				<div class="pure-u-1 pure-u-xl-10-24">
+					<header>
+						<h2>More Articles</h2>
+						<hr>
+					</header>
+					{{# each nextBlogs }}
+					<aside>
+						<a href="/{{ this.url }}" class="next-article" style="background-image: url('/{{ this.url }}/{{ this.image }}');">
+							<h3>{{ this.title }}</h3>
+						</a>
+					</aside>
+					{{/each}}
+				</div>
+			</section>
+
+			<script type="text/javascript">
+				// Disqus Config
+				// noinspection ES6ConvertVarToLetConst
+				var disqus_config = function() {
+					this.page.url = 'http://m1cr0man.com/{{ post.url }}';
+					this.page.identifier = '{{ post.id }}';
+				}
+			</script>
+
+			<!-- Disqus -->
+			<script type="text/javascript" src="/javascripts/disqus.js"></script>
 {{> footer }}

@@ -1,6 +1,5 @@
 import { Controller, Get, Inject, Render } from '@nestjs/common'
-import { Blog } from '../blogs/entity'
-import { BlogsService } from '../blogs/service'
+import { Blog, BlogsService } from '../blogs'
 
 
 const TEMPLATE_DATA = {
@@ -12,7 +11,7 @@ const TEMPLATE_DATA = {
     }
 }
 
-const EMPTY_BLOG = new Blog('-1', 'empty', 'No posts yet', new Date(), true, 'Come back soon!')
+const EMPTY_BLOG = new Blog('-1', 'empty', 'No posts yet', new Date(), 'Come back soon!')
 
 @Controller()
 export class M1cr0blogController {
