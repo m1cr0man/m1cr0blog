@@ -9,7 +9,7 @@ import {
     Patch,
     Post,
     Response,
-    UseGuards,
+    UseGuards
 } from '@nestjs/common'
 import { ApiImplicitBody, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger'
 import { Response as IResponse } from 'express'
@@ -17,6 +17,7 @@ import { AuthUserDto, CreateUserDto } from './dtos'
 import { User } from './entity'
 import { AuthGuard } from './guard'
 import { UserService } from './service'
+
 
 @ApiUseTags('Users')
 @Controller('/api/v1/users')
@@ -57,7 +58,7 @@ export class UserController {
         res.header('X-Token',
             (await this.service.authenticate(authUserDto)).token
         )
-        return res.sendStatus(204)
+        return res.sendStatus(200)
     }
 
     @Get('manage/:name')

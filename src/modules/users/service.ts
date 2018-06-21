@@ -5,6 +5,7 @@ import { AuthUserDto, CreateUserDto } from './dtos'
 import { User } from './entity'
 import { UserRepository } from './repository'
 
+
 @Injectable()
 export class UserService extends BaseService<User> {
     constructor(
@@ -38,7 +39,7 @@ export class UserService extends BaseService<User> {
     }
 
     async authenticate(credentials: AuthUserDto): Promise<User> {
-        if (!this.repo.exists(credentials.name))
+        if (!credentials.name || !credentials.password || !this.repo.exists(credentials.name))
             throw new UnauthorizedException('Incorrect username/password')
 
         const user = this.repo.findOne(credentials.name)

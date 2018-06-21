@@ -4,10 +4,11 @@ import {
     ExecutionContext,
     Inject,
     Injectable,
-    UnauthorizedException,
+    UnauthorizedException
 } from '@nestjs/common'
 import { Request } from 'express'
 import { UserService } from './service'
+
 
 export const AuthedUser = createParamDecorator((data, req: Request) => req.user)
 
@@ -23,7 +24,7 @@ export class AuthGuard implements CanActivate {
         const req = context.switchToHttp().getRequest()
         const raw_header = (req.header('Authorization') || '').split(' ')
 
-        if (raw_header.length != 2) throw new UnauthorizedException()
+        if (raw_header.length != 2) this.unauthorized(context)
 
         switch (raw_header[0].toLowerCase()) {
             case 'basic': {
@@ -40,8 +41,13 @@ export class AuthGuard implements CanActivate {
                 return true
             }
             default: {
-                throw new UnauthorizedException()
+                return this.unauthorized(context)
             }
         }
+    }
+
+    protected unauthorized(context: ExecutionContext): never {
+        context.switchToHttp().getResponse().header('WWW-Authenticate', 'Basic realm="Fuck off", charset="UTF-8"')
+        throw new UnauthorizedException()
     }
 }

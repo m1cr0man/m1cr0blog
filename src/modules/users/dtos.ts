@@ -1,21 +1,31 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger'
 
+
 export class AuthUserDto {
     @ApiModelProperty()
     // @ts-ignore
+    name?: string
+
+    @ApiModelProperty()
+        // @ts-ignore
+    password?: string
+}
+
+
+export class CreateUserDto {
+    @ApiModelProperty()
+        // @ts-ignore
     name: string
 
     @ApiModelProperty()
-    // @ts-ignore
+        // @ts-ignore
     password: string
-}
 
-export class CreateUserDto extends AuthUserDto {
     @ApiModelPropertyOptional()
-    // @ts-ignore
+        // @ts-ignore
     token?: string
 
     @ApiModelPropertyOptional()
-    // @ts-ignore
+        // @ts-ignore
     permissions?: string[]
 }
