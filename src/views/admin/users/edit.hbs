@@ -1,0 +1,16 @@
+{{> header }}
+<header class="pure-u-1">
+	<h1>{{#if user}}Edit{{else}}Add{{/if}} User</h1>
+</header>
+
+<form class="pure-u-1 pure-u-lg-1-2 pure-form pure-form-stacked" action="" method="POST">
+	<label for="id">ID</label>
+	<input type="text" name="id" placeholder="ID" value="{{ user.id }}" disabled>
+	<label for="username">Username</label>
+	<input type="text" name="username" autocomplete="username" placeholder="Username" value="{{ user.name }}" autofocus>
+	<label for="password">Password</label>
+	<input type="password" name="password" autocomplete="new-password" placeholder="Password" value="">
+	<br>
+	<button type="submit" class="pure-button pure-button-success">{{#if user}}Update{{else}}Add{{/if}}</button>
+</form>
+{{> footer }}

@@ -209,6 +209,12 @@ footer {
 	background-color: rgba(43, 137, 97, 0.5);
 }
 
+/* Admin body */
+.padded-body {
+    width: 80%;
+    margin: 0 auto 2% auto;
+}
+
 /* Post editor - File Upload Gallery */
 
 #uploader-gallery div {
