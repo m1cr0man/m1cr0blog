@@ -1,7 +1,10 @@
 import { compare, genSaltSync, hash } from 'bcryptjs'
+import { existsSync, mkdirSync } from 'fs'
+import { join as j } from 'path'
 import { BaseEntity, JSONData } from '../../fsrepo/entity'
-import { UploadsRepository } from '../uploads/repository'
 import { BackgroundsRepository } from '../backgrounds/repository'
+import { UploadsRepository } from '../uploads/repository'
+
 
 const salt = genSaltSync(10)
 
@@ -23,6 +26,7 @@ export class User extends BaseEntity {
         public permissions: string[] = []
     ) {
         super()
+        if (!existsSync(j('users', id))) mkdirSync(j('users', id))
         this.uploads = new UploadsRepository(this)
         this.backgrounds = new BackgroundsRepository(this, this.uploads)
     }

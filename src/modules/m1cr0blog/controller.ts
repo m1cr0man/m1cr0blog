@@ -1,6 +1,7 @@
-import { Controller, Get, Inject, Param, Render, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Inject, Param, Post, Render, Response, UseGuards } from '@nestjs/common'
+import { Response as IResponse } from 'express'
 import { Blog, BlogsService } from '../blogs'
-import { AuthGuard, UserService } from '../users'
+import { AuthGuard, CreateUserDto, UserService } from '../users'
 
 
 const TEMPLATE_DATA = {
@@ -18,6 +19,7 @@ const TEMPLATE_DATA_ADMIN = {
 }
 
 const EMPTY_BLOG = new Blog('-1', 'empty', 'No posts yet', new Date(), 'Come back soon!')
+
 
 @Controller()
 export class M1cr0blogController {
@@ -62,5 +64,20 @@ export class M1cr0blogController {
     ) {
         const user = this.usersService.findOne(id)
         return {...TEMPLATE_DATA_ADMIN, user}
+    }
+
+    @Post('/admin/users/:id/')
+    @UseGuards(AuthGuard)
+    async adminUsersUpdate(
+        @Param('id') id: string,
+        @Body() updateUserDto: Partial<CreateUserDto>,
+        @Response() res: IResponse
+    ) {
+        // Filter out an empty password field
+        const data: { name?: string, password?: string } = {name: updateUserDto.name}
+        if ((updateUserDto.password || '').length)
+            data.password = updateUserDto.password
+        await this.usersService.update(id, data)
+        return res.redirect('./')
     }
 }

@@ -31,20 +31,20 @@ export class UserService extends BaseService<User> {
         return user
     }
 
-    async update(name: string, new_user: Partial<CreateUserDto>): Promise<User> {
+    async update(id: string, new_user: Partial<CreateUserDto>): Promise<User> {
         if (new_user.password) {
             new_user.password = await User.hashPassword(new_user.password)
         }
-        return super.update(name, new_user)
+        return super.update(id, new_user)
     }
 
     async authenticate(credentials: AuthUserDto): Promise<User> {
-        if (!credentials.name || !credentials.password || !this.repo.exists(credentials.name))
+        if (!credentials.name || !credentials.password)
             throw new UnauthorizedException('Incorrect username/password')
 
-        const user = this.repo.findOne(credentials.name)
+        const user = this.repo.findOneByName(credentials.name)
 
-        if (!await user.checkPassword(credentials.password)) {
+        if (!user || !await user.checkPassword(credentials.password)) {
             throw new UnauthorizedException('Incorrect username/password')
         }
 

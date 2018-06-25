@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { BaseEntity } from './entity'
 
+
 function recursiveDelete(fpath: string): void {
     if (!fs.existsSync(fpath)) return
 
@@ -86,10 +87,10 @@ export class Repository<Entity extends BaseEntity> {
         return true
     }
 
-    merge(ent: Entity, new_ent: Partial<Entity>): Entity {
-        return new this.enttype({
+    merge(ent: Entity, newEnt: Partial<Entity>): Entity {
+        return this.enttype.fromJSON({
             ...ent as object,
-            ...new_ent as object,
+            ...newEnt as object,
             // Don't let people change the original object ID
             id: ent.id
         })
