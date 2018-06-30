@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Inject, Param, Post, Render, Response, UseGuards } from '@nestjs/common'
 import { Response as IResponse } from 'express'
-import { Blog, BlogsService } from '../blogs'
+import { Blog, BlogsService, CreateBlogDto } from '../blogs'
 import { AuthGuard, CreateUserDto, UserService } from '../users'
 
 
 const TEMPLATE_DATA = {
     titleSuffix: 'M1cr0man\'s blog',
     title: 'M1cr0man\'s blog',
-    mainClasses: 'pure-g',
+    mainClasses: '',
     meta: {
         url: '/'
     }
@@ -38,9 +38,6 @@ export class M1cr0blogController {
         return {...TEMPLATE_DATA, blog}
     }
 
-    // TODO admin endpoints
-    // TODO blogs PUT request
-    // TODO template locals
     @Get('/admin/')
     @UseGuards(AuthGuard)
     @Render('admin/index')
@@ -48,6 +45,7 @@ export class M1cr0blogController {
         return TEMPLATE_DATA_ADMIN
     }
 
+    // User management
     @Get('/admin/users/')
     @UseGuards(AuthGuard)
     @Render('admin/users/index')
@@ -79,5 +77,76 @@ export class M1cr0blogController {
             data.password = updateUserDto.password
         await this.usersService.update(id, data)
         return res.redirect('./')
+    }
+
+    // Blogs management
+    @Get('/admin/blogs/')
+    @UseGuards(AuthGuard)
+    @Render('admin/blogs/index')
+    adminBlogsHome() {
+        const blogs = this.blogsService.find()
+        return {...TEMPLATE_DATA_ADMIN, blogs}
+    }
+
+    @Get('/admin/blogs/add')
+    @UseGuards(AuthGuard)
+    @Render('admin/blogs/edit')
+    adminBlogsAdd() {
+        return TEMPLATE_DATA_ADMIN
+    }
+
+    // TODO fix DTOs
+    @Post('/admin/blogs/add')
+    @UseGuards(AuthGuard)
+    adminBlogsCreate(
+        @Body() createBlogDto: CreateBlogDto,
+        @Response() res: IResponse
+    ) {
+        this.blogsService.create(createBlogDto)
+        return res.redirect('./')
+    }
+
+    @Get('/admin/blogs/:id/')
+    @UseGuards(AuthGuard)
+    @Render('admin/blogs/edit')
+    adminBlogsEdit(
+        @Param('id') id: string
+    ) {
+        const blog = this.blogsService.findOne(id)
+        return {...TEMPLATE_DATA_ADMIN, blog}
+    }
+
+    @Post('/admin/blogs/:id/')
+    @UseGuards(AuthGuard)
+    adminBlogsUpdate(
+        @Param('id') id: string,
+        @Body() updateBlogDto: Partial<CreateBlogDto>,
+        @Response() res: IResponse
+    ) {
+        this.blogsService.update(id, updateBlogDto)
+        return res.redirect('./')
+    }
+
+    @Get('/admin/blogs/:id/delete')
+    @UseGuards(AuthGuard)
+    adminbBlogsDelete(
+        @Param('id') id: string,
+        @Response() res: IResponse
+    ) {
+        this.blogsService.delete(id)
+        return res.redirect('../')
+    }
+
+    @Get('/admin/blogs/:id/publish')
+    @UseGuards(AuthGuard)
+    adminbBlogsPublish(
+        @Param('id') id: string,
+        @Response() res: IResponse
+    ) {
+        const blog = this.blogsService.findOne(id)
+        blog.published = true
+        blog.timestamp = new Date()
+        this.blogsService.update(id, blog)
+        return res.redirect('../')
     }
 }

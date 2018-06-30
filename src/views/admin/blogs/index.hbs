@@ -1,0 +1,38 @@
+{{> header }}
+<header class='pure-u-1'>
+	<h1>All posts</h1>
+	<a href='add' class='pure-button pure-button-success'>Add</a>
+	<br>
+	<br>
+</header>
+
+<section class='pure-u-1'>
+	<table style='width: 100%;' class='pure-table pure-table-bordered pure-table-striped'>
+		<thead>
+		<tr>
+			<th>Title</th>
+			<th>Date</th>
+			<th>Tags</th>
+			<th>Published?</th>
+			<th>Actions</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{# each blogs }}
+			<tr>
+				<td>{{ this.title }}</td>
+				<td>{{ this.timestamp }}</td>
+				<td>{{ this.tags }}</td>
+				<td>{{ this.published }}</td>
+				<td>
+					<a href='{{ this.id }}' class='pure-button pure-button-secondary'>Edit</a>
+					{{#unless this.published}}
+						<a href='{{ this.id }}/publish' class='pure-button pure-button-primary'>Publish</a>{{/unless}}
+					<a href='{{ this.id }}/delete' class='pure-button pure-button-error'>Delete</a>
+				</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</section>
+{{> footer }}

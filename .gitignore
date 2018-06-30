@@ -13,3 +13,4 @@ hidden/
 *.iml
 .idea/
 /users/
+/src/static/javascripts/marked.js
