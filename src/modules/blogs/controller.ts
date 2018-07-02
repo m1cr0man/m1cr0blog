@@ -1,4 +1,18 @@
-import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post, Put, UseGuards } from '@nestjs/common'
+import {
+    Body,
+    Controller,
+    Delete,
+    FileInterceptor,
+    Get,
+    HttpCode,
+    Inject,
+    Param,
+    Post,
+    Put,
+    UploadedFile,
+    UseGuards,
+    UseInterceptors
+} from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { AuthGuard } from '../users'
 import { CreateBlogDto, UpdateBlogDto } from './dtos'
@@ -64,5 +78,34 @@ export class BlogsController {
         @Param('id') id: string
     ): void {
         return this.service.publish(id)
+    }
+
+    @Get('/:id/files')
+    @ApiOperation({title: 'List Files'})
+    listFiles(
+        @Param('id') id: string
+    ) {
+        return this.service.getFiles(id)
+    }
+
+    @Post('/:id/files')
+    @ApiOperation({title: 'Add File'})
+    @UseInterceptors(FileInterceptor('file', {dest: 'uploads'}))
+    @HttpCode(201)
+    addFile(
+        @Param('id') id: string,
+        @UploadedFile() file: Express.Multer.File // Express.Multer.File is in global namespace
+    ): void {
+        this.service.addFile(id, file)
+    }
+
+    @Delete('/:id/files/:filename')
+    @ApiOperation({title: 'Delete File'})
+    @HttpCode(204)
+    deleteFile(
+        @Param('id') id: string,
+        @Param('filename') filename: string
+    ): void {
+        this.service.deleteFile(id, filename)
     }
 }

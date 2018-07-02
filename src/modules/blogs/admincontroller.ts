@@ -46,7 +46,8 @@ export class BlogsAdminController {
         @Param('id') id: string
     ) {
         const blog = this.service.findOne(id)
-        return {...TEMPLATE_DATA_ADMIN, blog}
+        const files = this.service.repo.getFiles(blog)
+        return {...TEMPLATE_DATA_ADMIN, blog, files}
     }
 
     @Post(':id/')

@@ -11,6 +11,9 @@
 			<input name="title" type="text" autocomplete="title" placeholder="Title" value="{{ blog.title }}" autofocus>
 			<label for="url">URL</label>
 			<input name="url" type="text" autocomplete="url" placeholder="URL" value="{{ blog.url }}" autofocus>
+			<label for="image">Primary image</label>
+			<input name="image" type="text" autocomplete="image" placeholder="Primary image" value="{{ blog.image }}"
+				   autofocus>
 			<label for="tags">Tags</label>
 			<input name="tags" type="text" autocomplete="tags" placeholder="Tags" value="{{ blog.tags }}" autofocus>
 			<br>
@@ -26,7 +29,8 @@
 	</form>
 </div>
 
-<form id="image-uploader" class="pure-g pure-form pure-form-stacked" action="upload" method="POST"
+<form id="image-uploader" class="pure-g pure-form pure-form-stacked" action="/api/v1/blogs/{{ blog.id }}/files"
+	  method="POST"
 	  enctype="multipart/form-data">
 	<fieldset class="pure-u-1-4">
 		<h2>Images</h2>
@@ -41,18 +45,18 @@
 			<button type="button" class="appender pure-button pure-button-success">Insert</button>
 			<button type="button" class="primary pure-button pure-button-secondary">Primary</button>
 		</div>
-		{{#each blog.files}}
-			<div data-name="{{ this.name }}">
-				<a href="/posts/{{ blog.id }}/{{ this.name }}"><img src="/posts/{{ blog.id }}/h256/{{ this.name }}"></a>
-				<h3>{{ this.name }}</h3>
+		{{#each files}}
+			<div data-name="{{ this }}">
+				<a href="/posts/{{ blog.id }}/{{ this }}"><img src="/posts/{{ blog.id }}/h256/{{ this }}"></a>
+				<h3>{{ this }}</h3>
 				<button type="button" class="remover pure-button pure-button-error"
-						onclick="deleteFile('{{ this.name }}');">Delete
+						onclick="deleteFile('{{ this }}');">Delete
 				</button>
 				<button type="button" class="appender pure-button pure-button-success"
-						onclick="appendFile('{{ this.name }}');">Insert
+						onclick="appendFile('{{ this }}');">Insert
 				</button>
 				<button type="button" class="primary pure-button pure-button-secondary"
-						onclick="setPrimary('{{ this.name }}');">Primary
+						onclick="setPrimary('{{ this }}');">Primary
 				</button>
 			</div>
 		{{/each}}
@@ -123,8 +127,12 @@
 	}
 
 	function deleteFile(name) {
-		$.get('deleteFile/' + name, null, function () {
-			$('[data-name="' + name + '"]').hide()
+		$.ajax({
+			url: '/api/v1/blogs/{{ blog.id }}/files/' + name,
+			method: 'delete',
+			success: function () {
+				$('[data-name="' + name + '"]').hide()
+			}
 		})
 	}
 

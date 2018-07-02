@@ -39,4 +39,16 @@ export class BlogsService extends BaseService<Blog> {
             (!last || last.timestamp > blog.timestamp) && last || blog,
             null)
     }
+
+    getFiles(id: string): string[] {
+        return this.repo.getFiles(this.findOne(id))
+    }
+
+    addFile(id: string, file: Express.Multer.File): void {
+        this.repo.saveFile(this.findOne(id), file)
+    }
+
+    deleteFile(id: string, filename: string): void {
+        this.repo.deleteFile(this.findOne(id), filename)
+    }
 }
