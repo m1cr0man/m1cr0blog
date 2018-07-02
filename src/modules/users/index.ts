@@ -1,3 +1,4 @@
+export * from './admincontroller'
 export * from './controller'
 export * from './dtos'
 export * from './entity'
