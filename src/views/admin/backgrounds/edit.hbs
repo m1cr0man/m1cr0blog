@@ -6,13 +6,9 @@
 	<br>
 </header>
 
-<section class='pure-u-1'>
-	<div class='pure-g'>
-		{{#each images }}
-			<div class='pure-u-1-4'>
-				<img src='/api/v1/uploads/{{ ../userId }}/{{ this.upload.id }}/download'>
-			</div>
-		{{/each}}
-	</div>
+<section class='pure-u-1 admin-gallery'>
+	{{#each images }}
+		<img src='/api/v1/uploads/{{ ../userId }}/{{ this.upload.id }}/download'>
+	{{/each}}
 </section>
 {{> footer }}
