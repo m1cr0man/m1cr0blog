@@ -1,0 +1,18 @@
+{{> header }}
+<header class='pure-u-1'>
+	<h1>{{ tag }} images</h1>
+	<a href='add' class='pure-button pure-button-success'>Add</a>
+	<br>
+	<br>
+</header>
+
+<section class='pure-u-1'>
+	<div class='pure-g'>
+		{{#each images }}
+			<div class='pure-u-1-4'>
+				<img src='/api/v1/uploads/{{ ../userId }}/{{ this.upload.id }}/download'>
+			</div>
+		{{/each}}
+	</div>
+</section>
+{{> footer }}

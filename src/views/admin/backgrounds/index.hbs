@@ -1,0 +1,27 @@
+{{> header }}
+<header class='pure-u-1'>
+	<h1>All backgrounds</h1>
+	<a href='add' class='pure-button pure-button-success'>Add</a>
+	<br>
+	<br>
+</header>
+
+<section class='pure-u-1'>
+	<table style='width: 100%;' class='pure-table pure-table-bordered pure-table-striped'>
+		<thead>
+		<tr>
+			<th>Tag</th>
+			<th>Images</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{# each tags }}
+			<tr>
+				<td><a href="{{ this.name }}/">{{ this.name }}</a></td>
+				<td>{{ this.images }}</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</section>
+{{> footer }}
