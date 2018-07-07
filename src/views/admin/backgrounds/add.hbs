@@ -1,0 +1,14 @@
+{{> header }}
+<header class='pure-u-1'>
+	<h1>Add backgrounds</h1>
+	<a href='add' class='pure-button pure-button-success'>Add</a>
+	<br>
+	<br>
+</header>
+
+<section class='pure-u-1 admin-gallery'>
+	{{#each images }}
+		<img src='/api/v1/uploads/{{ ../userId }}/{{ this.upload.id }}/download'>
+	{{/each}}
+</section>
+{{> footer }}

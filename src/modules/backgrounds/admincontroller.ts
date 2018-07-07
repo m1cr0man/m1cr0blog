@@ -35,6 +35,14 @@ export class BackgroundsAdminController {
         return {...TEMPLATE_DATA_ADMIN, tags}
     }
 
+    @Get('add')
+    @Render('admin/backgrounds/add')
+    adminBackgroundsAdd(
+        @Param('userId') userId: string
+    ) {
+        return {...TEMPLATE_DATA_ADMIN, userId}
+    }
+
     @Get(':tag/')
     @Render('admin/backgrounds/edit')
     adminBackgroundsEdit(
