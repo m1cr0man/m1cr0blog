@@ -8,7 +8,7 @@ import { BlogsService } from './service'
 
 
 @ApiUseTags('Blogs Admin')
-@Controller('/admin/blogs/')
+@Controller('/admin/blogs')
 @UseGuards(AuthGuard)
 export class BlogsAdminController {
     constructor(
