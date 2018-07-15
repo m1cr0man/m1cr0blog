@@ -1,3 +1,4 @@
+import * as marked from 'marked'
 import { BaseEntity, JSONData } from '../../fsrepo/entity'
 
 
@@ -22,6 +23,10 @@ export class Blog extends BaseEntity {
         public tags: string[] = []
     ) {
         super()
+    }
+
+    get rendered(): string {
+        return marked(this.markdown)
     }
 
     static fromJSON({id, url, title, timestamp, markdown, published, image, tags}: JSONData<Blog>): Blog {
