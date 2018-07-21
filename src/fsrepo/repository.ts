@@ -4,6 +4,8 @@ import * as path from 'path'
 import { BaseEntity } from './entity'
 
 
+export const BASEDIR = 'storage'
+
 function recursiveDelete(fpath: string): void {
     if (!fs.existsSync(fpath)) return
 
@@ -36,7 +38,8 @@ export class Repository<Entity extends BaseEntity> {
         public metafile: string = 'data.json',
         public joins: Join<Entity>[] = []
     ) {
-        if (!fs.existsSync(root)) fs.mkdirSync(root)
+        this.root = path.join(BASEDIR, root)
+        if (!fs.existsSync(root)) fs.mkdirSync(this.root)
     }
 
     protected writeData(ent: Entity) {
