@@ -4,14 +4,17 @@
   "description": "Blog and other microservices",
   "main": "dist/index.js",
   "author": "m1cr0man",
+  "maintainer": "m1cr0man",
   "license": "Apache-2.0",
   "homepage": "http://www.m1cr0man.com/",
   "scripts": {
     "start": "node dist/index.js",
+    "docker": "docker run --rm --name $npm_package_name -d -P -v m1cr0blog_storage:/opt/m1cr0blog/storage:rw $npm_package_maintainer/$npm_package_name:latest",
     "debug": "tsc -w & nodemon --inspect dist/index.js",
     "prestart": "npm run build",
-    "prebuild": "([ ! -e dist/static ] && ln -s \"`pwd`/src/static\" dist/static || true) && ([ ! -e dist/views ] && ln -s \"`pwd`/src/views\" dist/views || true)",
-    "build": "tsc"
+    "prebuild": "mkdir -p dist && ([ ! -e dist/static ] && ln -s \"`pwd`/src/static\" dist/static || true) && ([ ! -e dist/views ] && ln -s \"`pwd`/src/views\" dist/views || true)",
+    "build": "tsc",
+    "build:docker": "docker build --force-rm --build-arg VERSION=\"$npm_package_version\" --build-arg SHA=$(git rev-parse --short HEAD) -t \"$npm_package_maintainer/$npm_package_name:$npm_package_version\" -t \"$npm_package_maintainer/$npm_package_name:latest\" ."
   },
   "repository": {
     "type": "git",

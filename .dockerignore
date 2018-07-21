@@ -1,0 +1,18 @@
+node_modules/
+dist/
+hidden/
+storage/
+.git/
+
+# Sublime Text
+*.sublime-*
+
+# VS Code
+*.code-*
+.vscode/
+
+# IntelliJ
+*.iml
+.idea/
+/users/
+/src/static/javascripts/marked.js
