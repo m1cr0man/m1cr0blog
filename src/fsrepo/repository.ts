@@ -39,7 +39,7 @@ export class Repository<Entity extends BaseEntity> {
         public joins: Join<Entity>[] = []
     ) {
         this.root = path.join(BASEDIR, root)
-        if (!fs.existsSync(root)) fs.mkdirSync(this.root)
+        if (!fs.existsSync(this.root)) fs.mkdirSync(this.root)
     }
 
     protected writeData(ent: Entity) {
