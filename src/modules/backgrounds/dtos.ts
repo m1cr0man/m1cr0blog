@@ -1,4 +1,4 @@
-class AddBackgroundDto {
+export class AddBackgroundDto {
     // @ts-ignore
     uploadId: string
 
