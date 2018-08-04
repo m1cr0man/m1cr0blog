@@ -55,6 +55,17 @@ export class UploadsController {
         return uploads.delete(id)
     }
 
+    @Get(':id/delete')
+    @UseGuards(AuthGuard)
+    @ApiOperation({title: 'Delete (GET based)'})
+    @HttpCode(204)
+    deleteAlt(
+        @Uploads() uploads: UploadsService,
+        @Param('id') id: string
+    ): void {
+        return uploads.delete(id)
+    }
+
     @Get(':userId/:id')
     @ApiOperation({ title: 'View' })
     @HttpCode(200)
