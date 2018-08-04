@@ -6,6 +6,8 @@ import { BaseEntity } from './entity'
 
 export const BASEDIR = 'storage'
 
+if (!fs.existsSync(BASEDIR)) fs.mkdirSync(BASEDIR)
+
 function recursiveDelete(fpath: string): void {
     if (!fs.existsSync(fpath)) return
 
@@ -65,7 +67,12 @@ export class Repository<Entity extends BaseEntity> {
 
     generateId(): string {
         const id = Math.random().toString(36).slice(-this.idLength)
-        return (fs.existsSync(path.join(this.root, id))) ? this.generateId() : id
+        const dir = path.join(this.root, id)
+        if (fs.existsSync(dir)) {
+            return this.generateId()
+        }
+        fs.mkdirSync(dir)
+        return id
     }
 
     getDir(ent: Entity): string {
@@ -81,10 +88,6 @@ export class Repository<Entity extends BaseEntity> {
     }
 
     save(ent: Entity): boolean {
-        const dir = this.getDir(ent)
-
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir)
-
         this.writeData(ent)
 
         return true
