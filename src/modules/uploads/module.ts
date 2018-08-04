@@ -4,17 +4,18 @@ import { UploadsController } from './controller'
 import { UploadsPipe } from './pipe'
 import { UploadsRepository } from './repository'
 import { UploadsService } from './service'
+import { UploadsViewController } from './viewcontroller'
+
 
 @Module({
-    controllers: [UploadsController],
+    controllers: [UploadsController, UploadsViewController],
     providers: [UploadsPipe],
     imports: [UserModule],
-    exports: [UploadsPipe],
+    exports: [UploadsPipe]
 })
 export class UploadsModule {
     constructor(
-        @Inject(UserService)
-        userService: UserService
+        @Inject(UserService) userService: UserService
     ) {
         // Set up expiry monitor
         // Runs every 5 minutes

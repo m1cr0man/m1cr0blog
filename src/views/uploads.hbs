@@ -1,0 +1,42 @@
+{{> header }}
+<section class="blog-body upload">
+	<header>
+		<h1>{{ upload.filename }}</h1>
+		<time>{{ meta.date }}</time>
+		<!--<b>Views: { { upload.views }}</b>-->
+		<b class="download-button"><a href="{{ downloadPath }}">Download</a></b>
+		<hr>
+	</header>
+
+	<article>
+		{{#if type.isImage }}
+			<a href="{{ downloadPath }}"><img src="{{ downloadPath }}" alt="{{ upload.filename }} - Click to download"></a>
+		{{else if type.isText }}
+			<pre class="line-numbers show-language" data-src="{{ downloadPath }}"></pre>
+			<script type="text/javascript"
+					src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css">
+		{{else if type.isVideo }}
+			<div id="video">
+				<video class="video-js vjs-default-skin" controls preload="auto" data-setup='{"fluid": true}'>
+					<source src="{{ downloadPath }}" type="{{ upload.mime }}"/>
+					To view this video please enable JavaScript, or try using a web browser that
+					<a href="//videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+				</video>
+			</div>
+			<script type="text/javascript"
+					src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.1.0/video.min.js"></script>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.1.0/video-js.min.css">
+		{{else if type.isAudio }}
+			<audio controls>
+				<source src="{{ downloadPath }}" type="{{ upload.mime }}">
+				Your browser does not support the audio element.
+				<a href="{{ downloadPath }}">Click Here</a> to download the file instead.
+			</audio>
+		{{else}}
+			Preview not available due to the file type - Sorry!
+			<a href="{{ downloadPath }}">Click Here</a> to download it.
+		{{/if}}
+	</article>
+</section>
+{{> footer }}

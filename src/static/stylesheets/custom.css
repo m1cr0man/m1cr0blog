@@ -265,14 +265,27 @@ footer {
 		color: #003214;
 	}
 
-.upload > p {
+.upload > article {
+	width: auto;
 	text-align: center;
 	margin: 0 auto;
-	width: auto;
+}
+
+.upload pre {
+	text-align: left;
 }
 
 .upload img {
 	max-width: 100%;
+}
+
+.download-button a {
+	color: #003214;
+	text-decoration: none;
+}
+
+.download-button a:hover {
+	color: #2b8961;
 }
 
 .admin-gallery img {
