@@ -12,7 +12,8 @@ COPY package*.json /opt/m1cr0blog/
 
 WORKDIR /opt/m1cr0blog
 
-RUN mkdir node_modules && npm install
+RUN mkdir node_modules && npm install && \
+	apk update && apk add --update wget && rm -rf /var/cache/apk/*
 
 COPY . /opt/m1cr0blog
 
@@ -24,4 +25,4 @@ EXPOSE 3000
 
 ENTRYPOINT npm run start
 
-HEALTHCHECK --interval=15s --timeout=1s --retries=3 CMD curl -so /dev/null http://127.0.0.1/ 3000
+HEALTHCHECK --interval=15s --timeout=1s --retries=3 CMD wget -qO /dev/null http://127.0.0.1:3000/
