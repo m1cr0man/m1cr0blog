@@ -2,7 +2,7 @@ node_modules/
 hidden/
 src/
 dist/storage
-dist/*.map
+dist/**/*.map
 
 # Docker
 .dockerignore
@@ -19,3 +19,6 @@ Dockerfile
 *.iml
 .idea/
 /users/
+
+# NPM Packages
+*.tgz

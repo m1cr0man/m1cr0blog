@@ -11,6 +11,7 @@
     "start": "node dist/index.js",
     "docker": "docker run --rm --name $npm_package_name -d -P -v m1cr0blog_storage:/opt/m1cr0blog/storage:rw $npm_package_maintainer/$npm_package_name:latest",
     "debug": "tsc -w & nodemon --inspect dist/index.js",
+    "prepublish": "npm run build",
     "prebuild": "mkdir -p dist && ([ ! -e dist/static ] && rsync -va --delete src/static src/views dist/ || true)",
     "build": "tsc",
     "build:docker": "docker build --force-rm --build-arg VERSION=\"$npm_package_version\" --build-arg SHA=$(git rev-parse --short HEAD) -t \"$npm_package_maintainer/$npm_package_name:$npm_package_version\" -t \"$npm_package_maintainer/$npm_package_name:latest\" ."

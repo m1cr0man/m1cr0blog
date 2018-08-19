@@ -16,4 +16,6 @@ storage/
 *.iml
 .idea/
 /users/
-/src/static/javascripts/marked.js
+
+# NPM Packages
+*.tgz
