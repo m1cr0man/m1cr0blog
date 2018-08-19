@@ -1,6 +1,12 @@
 node_modules/
-dist/
 hidden/
+src/
+dist/storage
+dist/*.map
+
+# Docker
+.dockerignore
+Dockerfile
 
 # Sublime Text
 *.sublime-*
@@ -13,5 +19,3 @@ hidden/
 *.iml
 .idea/
 /users/
-
-/src/static/javascripts/marked.js

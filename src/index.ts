@@ -1,7 +1,9 @@
+#!/usr/bin/env node
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as hbs from 'hbs'
 import { M1cr0blogModule } from './modules/m1cr0blog/module'
+
 
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(M1cr0blogModule, { cors: true })

@@ -1,6 +1,6 @@
 {
   "name": "m1cr0blog",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Blog and other microservices",
   "main": "dist/index.js",
   "author": "m1cr0man",
@@ -11,7 +11,7 @@
     "start": "node dist/index.js",
     "docker": "docker run --rm --name $npm_package_name -d -P -v m1cr0blog_storage:/opt/m1cr0blog/storage:rw $npm_package_maintainer/$npm_package_name:latest",
     "debug": "tsc -w & nodemon --inspect dist/index.js",
-    "prebuild": "mkdir -p dist && ([ ! -e dist/static ] && ln -s \"`pwd`/src/static\" dist/static || true) && ([ ! -e dist/views ] && ln -s \"`pwd`/src/views\" dist/views || true)",
+    "prebuild": "mkdir -p dist && ([ ! -e dist/static ] && rsync -va --delete src/static src/views dist/ || true)",
     "build": "tsc",
     "build:docker": "docker build --force-rm --build-arg VERSION=\"$npm_package_version\" --build-arg SHA=$(git rev-parse --short HEAD) -t \"$npm_package_maintainer/$npm_package_name:$npm_package_version\" -t \"$npm_package_maintainer/$npm_package_name:latest\" ."
   },
@@ -21,6 +21,9 @@
   },
   "bugs": {
     "url": "https://github.com/m1cr0man/m1cr0blog/issues"
+  },
+  "bin": {
+    "m1cr0blog": "./dist/index.js"
   },
   "dependencies": {
     "@nestjs/common": "^5.1.0",
