@@ -10,14 +10,16 @@ import {
     Response,
     UploadedFile,
     UseGuards,
-    UseInterceptors,
+    UseInterceptors
 } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { Response as IResponse } from 'express'
+import { MULTER_TMPDIR } from '../../constants'
 import { AuthGuard } from '../users'
 import { Upload } from './entity'
 import { UploadsPipe } from './pipe'
 import { UploadsService, UploadsServiceDecorator as Uploads } from './service'
+
 
 @ApiUseTags('Uploads')
 @Controller('/api/v1/uploads')
@@ -35,7 +37,7 @@ export class UploadsController {
     @UseGuards(AuthGuard)
     @ApiOperation({ title: 'Upload' })
     @HttpCode(201)
-    @UseInterceptors(FileInterceptor('file', { dest: 'uploads' }))
+    @UseInterceptors(FileInterceptor('file', { dest: MULTER_TMPDIR }))
     add(
         @Uploads() uploads: UploadsService,
         @UploadedFile() file: Express.Multer.File, // Express.Multer.File is in global namespace

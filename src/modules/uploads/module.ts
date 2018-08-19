@@ -23,6 +23,6 @@ export class UploadsModule {
             for (let user of userService.find()) {
                 (new UploadsService(new UploadsRepository(user))).clean()
             }
-        }, 1000 * 60 * 5)
+        }, 100000)
     }
 }

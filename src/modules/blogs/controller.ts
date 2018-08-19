@@ -14,6 +14,7 @@ import {
     UseInterceptors
 } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
+import { MULTER_TMPDIR } from '../../constants'
 import { AuthGuard } from '../users'
 import { CreateBlogDto, UpdateBlogDto } from './dtos'
 import { Blog } from './entity'
@@ -90,7 +91,7 @@ export class BlogsController {
 
     @Post('/:id/files')
     @ApiOperation({title: 'Add File'})
-    @UseInterceptors(FileInterceptor('file', {dest: 'uploads'}))
+    @UseInterceptors(FileInterceptor('file', {dest: MULTER_TMPDIR}))
     @HttpCode(201)
     addFile(
         @Param('id') id: string,

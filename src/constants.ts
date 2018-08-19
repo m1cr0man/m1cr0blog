@@ -11,3 +11,5 @@ export const TEMPLATE_DATA_ADMIN = {
     ...TEMPLATE_DATA,
     mainClasses: 'pure-g padded-body'
 }
+
+export const MULTER_TMPDIR = 'storage/multer_temp'
