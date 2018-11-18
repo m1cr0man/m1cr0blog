@@ -13,7 +13,6 @@
 			<th>Title</th>
 			<th>Date</th>
 			<th>Tags</th>
-			<th>Published?</th>
 			<th>Actions</th>
 		</tr>
 		</thead>
@@ -21,13 +20,15 @@
 		{{# each blogs }}
 			<tr>
 				<td>{{ this.title }}</td>
-				<td>{{ this.timestamp }}</td>
+				<td>{{ this.humanTimestamp }}</td>
 				<td>{{ this.tags }}</td>
-				<td>{{ this.published }}</td>
 				<td>
 					<a href='{{ this.id }}' class='pure-button pure-button-secondary'>Edit</a>
-					{{#unless this.published}}
-						<a href='{{ this.id }}/publish' class='pure-button pure-button-primary'>Publish</a>{{/unless}}
+					{{#if this.published}}
+						<a href='{{ this.id }}/unpublish' class='pure-button pure-button-primary'>Unpublish</a>
+					{{else}}
+						<a href='{{ this.id }}/publish' class='pure-button pure-button-primary'>Publish</a>
+					{{/if}}
 					<a href='{{ this.id }}/delete' class='pure-button pure-button-error'>Delete</a>
 				</td>
 			</tr>

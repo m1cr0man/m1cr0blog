@@ -66,10 +66,16 @@ export class BlogsAdminController {
         @Param('id') id: string,
         @Response() res: IResponse
     ) {
-        const blog = this.service.findOne(id)
-        blog.published = true
-        blog.timestamp = new Date()
-        this.service.update(id, blog)
+        this.service.changePublish(id)
+        return res.redirect('../')
+    }
+
+    @Get(':id/unpublish')
+    adminbBlogsUnpublish(
+        @Param('id') id: string,
+        @Response() res: IResponse
+    ) {
+        this.service.changePublish(id, false)
         return res.redirect('../')
     }
 }

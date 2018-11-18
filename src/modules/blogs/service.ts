@@ -28,9 +28,9 @@ export class BlogsService extends BaseService<Blog> {
         return blog
     }
 
-    publish(id: string) {
+    changePublish(id: string, state: boolean = true) {
         const blog = this.findOne(id)
-        blog.published = true
+        blog.published = state
         this.repo.save(blog)
     }
 

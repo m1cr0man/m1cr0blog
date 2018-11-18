@@ -78,7 +78,16 @@ export class BlogsController {
     publish(
         @Param('id') id: string
     ): void {
-        return this.service.publish(id)
+        return this.service.changePublish(id)
+    }
+
+    @Post('/:id/unpublish')
+    @ApiOperation({title: 'Unpublish'})
+    @HttpCode(204)
+    unpublish(
+        @Param('id') id: string
+    ): void {
+        return this.service.changePublish(id, false)
     }
 
     @Get('/:id/files')
