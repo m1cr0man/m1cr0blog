@@ -20,7 +20,7 @@ export class M1cr0blogController {
     @Render('index')
     root() {
         const blog = this.blogsService.findLatest() || EMPTY_BLOG
-        return {...TEMPLATE_DATA, blog}
+        return {...TEMPLATE_DATA, blog, isLanding: true}
     }
 
     @Get('/posts/:url')
