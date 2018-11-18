@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
+import * as path from 'path'
 import { BaseService } from '../../fsrepo/service'
 import { CreateBlogDto } from './dtos'
 import { Blog } from './entity'
@@ -19,7 +20,7 @@ export class BlogsService extends BaseService<Blog> {
             this.repo.generateId(),
             newBlog.url,
             newBlog.title,
-            new Date(newBlog.timestamp),
+            (newBlog.timestamp) ? new Date(newBlog.timestamp) : new Date(),
             newBlog.markdown
         )
         this.repo.save(blog)
@@ -36,8 +37,19 @@ export class BlogsService extends BaseService<Blog> {
     findLatest(): Blog | null {
         const blogs = this.find()
         return blogs.reduce((last: null | Blog, blog: Blog) =>
-            (!last || last.timestamp > blog.timestamp) && last || blog,
+            (blog.published && (!last || blog.timestamp > last.timestamp)) && blog || last,
             null)
+    }
+
+    findByUrl(url: string): Blog | null {
+        const blogs = this.find()
+        return blogs.reduce((last: null | Blog, blog: Blog) =>
+            blog.published && blog.url == url && blog || last,
+            null)
+    }
+
+    getFilePath(blog: Blog, filename: string): string {
+        return path.resolve(path.join(this.repo.getDir(blog), filename))
     }
 
     getFiles(id: string): string[] {

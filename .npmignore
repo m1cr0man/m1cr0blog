@@ -22,3 +22,6 @@ Dockerfile
 
 # NPM Packages
 *.tgz
+
+# Other
+*.http

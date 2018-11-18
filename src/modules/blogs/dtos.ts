@@ -27,5 +27,9 @@ export class UpdateBlogDto extends CreateBlogDto {
 
     @ApiModelProperty()
         // @ts-ignore
+    image: string
+
+    @ApiModelProperty()
+        // @ts-ignore
     tags: string[]
 }

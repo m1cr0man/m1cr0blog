@@ -5,17 +5,17 @@
 
 <div class="pure-u-1">
 	<form class="pure-g pure-form pure-form-stacked" action="" method="POST">
-		<input name="image" type="hidden" value="{{ blog.image }}">
 		<fieldset class="pure-u-1-4">
 			<label for="title">Title</label>
 			<input name="title" type="text" autocomplete="title" placeholder="Title" value="{{ blog.title }}" autofocus>
 			<label for="url">URL</label>
-			<input name="url" type="text" autocomplete="url" placeholder="URL" value="{{ blog.url }}" autofocus>
+			<input name="url" type="text" autocomplete="url" placeholder="URL" value="{{ blog.url }}">
+			<label for="timestamp">Date</label>
+			<input name="timestamp" type="date" value="{{ blog.htmlTimestamp }}">
 			<label for="image">Primary image</label>
-			<input name="image" type="text" autocomplete="image" placeholder="Primary image" value="{{ blog.image }}"
-				   autofocus>
+			<input name="image" type="text" autocomplete="image" placeholder="Primary image" value="{{ blog.image }}">
 			<label for="tags">Tags</label>
-			<input name="tags" type="text" autocomplete="tags" placeholder="Tags" value="{{ blog.tags }}" autofocus>
+			<input name="tags" type="text" autocomplete="tags" placeholder="Tags" value="{{ blog.tags }}">
 			<br>
 			<button type="submit" class="pure-button pure-button-success">{{#if blog}}Update{{else}}Add{{/if}}</button>
 			<button type="button" onclick="preview();" class="pure-button pure-button-secondary">Preview</button>
@@ -47,7 +47,7 @@
 		</div>
 		{{#each files}}
 			<div data-name="{{ this }}">
-				<a href="/posts/{{ blog.id }}/{{ this }}"><img src="/posts/{{ blog.id }}/h256/{{ this }}"></a>
+				<a href="/posts/{{ ../blog.id }}/{{ this }}"><img src="/posts/{{ ../blog.id }}/{{ this }}"></a>
 				<h3>{{ this }}</h3>
 				<button type="button" class="remover pure-button pure-button-error"
 						onclick="deleteFile('{{ this }}');">Delete
@@ -72,12 +72,13 @@
 	<hr>
 
 	<figure class="primary-image">
+		<img src='#'>
 	</figure>
 
 	<div></div>
 </article>
 
-<script type="text/javascript" src="/javascripts/marked.js"></script>
+<script type="text/javascript" src="https://unpkg.com/marked@0.5.1/marked.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript"
 		src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
@@ -85,13 +86,13 @@
 	function preview() {
 		$('article h1').html($('[name=title]').val())
 		$('article time').html((new Date()).toLocaleString())
-		$('article img').attr('src', '/posts/{{ blog.id }}/h600/' + $('[name=image]').val())
+		$('article img').attr('src', '/posts/{{ blog.id }}/' + $('[name=image]').val())
 		$('article div').html(marked($('textarea').val()))
 	}
 
 	function uploadImage() {
 		$('#image-uploader').ajaxSubmit({
-			beforeSend: function (data) {
+			beforeSend: function () {
 				var files = $('#image-uploader input')[0].files
 				for (var i = 0; i < files.length; i++) {
 					var file = files[i]
@@ -108,7 +109,7 @@
 			},
 			success: function () {
 				$('#uploader-gallery a img').each(function () {
-					$(this).attr('src', '/posts/{{ blog.id }}/h256/' + $(this).parent().parent().attr('data-name'))
+					$(this).attr('src', '/posts/{{ blog.id }}/' + $(this).parent().parent().attr('data-name'))
 				})
 			},
 			error: function (err) {
@@ -118,7 +119,7 @@
 	}
 
 	function appendFile(file) {
-		var val = '<a href="/posts/{{ blog.id }}/' + file + '"><img src="/posts/{{ blog.id }}/h384/' + file + '"></a>'
+		var val = '<a href="/posts/{{ blog.id }}/' + file + '"><img src="/posts/{{ blog.id }}/' + file + '"></a>'
 		return window.prompt('Ctrl+C -> Enter', val)
 	}
 

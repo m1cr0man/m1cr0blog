@@ -3,7 +3,7 @@ import { ApiUseTags } from '@nestjs/swagger'
 import { Response as IResponse } from 'express'
 import { TEMPLATE_DATA_ADMIN } from '../../constants'
 import { AuthGuard } from '../users'
-import { CreateBlogDto } from './dtos'
+import { CreateBlogDto, UpdateBlogDto } from './dtos'
 import { BlogsService } from './service'
 
 
@@ -25,19 +25,11 @@ export class BlogsAdminController {
     }
 
     @Get('add')
-    @Render('admin/blogs/edit')
-    adminBlogsAdd() {
-        return TEMPLATE_DATA_ADMIN
-    }
-
-    // TODO fix DTOs
-    @Post('add')
-    adminBlogsCreate(
-        @Body() createBlogDto: CreateBlogDto,
+    adminBlogsAdd(
         @Response() res: IResponse
     ) {
-        this.service.create(createBlogDto)
-        return res.redirect('./')
+        const blog = this.service.create(new CreateBlogDto())
+        return res.redirect('./' + blog.id)
     }
 
     @Get(':id/')
@@ -53,7 +45,7 @@ export class BlogsAdminController {
     @Post(':id/')
     adminBlogsUpdate(
         @Param('id') id: string,
-        @Body() updateBlogDto: Partial<CreateBlogDto>,
+        @Body() updateBlogDto: Partial<UpdateBlogDto>,
         @Response() res: IResponse
     ) {
         this.service.update(id, updateBlogDto)

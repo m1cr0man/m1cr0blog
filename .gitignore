@@ -16,3 +16,6 @@ hidden/
 
 # NPM Packages
 *.tgz
+
+# Other
+*.http

@@ -29,6 +29,14 @@ export class Blog extends BaseEntity {
         return marked(this.markdown)
     }
 
+    get htmlTimestamp(): string {
+        return this.timestamp.toISOString().substr(0, 10)
+    }
+
+    get humanTimestamp(): string {
+        return this.timestamp.toDateString()
+    }
+
     static fromJSON({id, url, title, timestamp, markdown, published, image, tags}: JSONData<Blog>): Blog {
         return new Blog(id, url, title, new Date(timestamp),
             markdown, image, published, tags)

@@ -2,14 +2,14 @@
 			<article class="blog-body blog-post">
 				<header>
 					<h1>{{ blog.title }}</h1>
-					<time>{{ blog.timestamp }}</time>
+					<time>{{ blog.humanTimestamp }}</time>
 				</header>
 
 				<hr>
 
 				<figure class="primary-image">
-					<a href="/{{ blog.url }}/{{ blog.image }}">
-						<img src="/{{ blog.url }}/{{ blog.image }}" alt="{{ blog.title }}">
+					<a href="/posts/{{ blog.url }}/{{ blog.image }}">
+						<img src="/posts/{{ blog.url }}/{{ blog.image }}" alt="{{ blog.title }}">
 					</a>
 				</figure>
 
@@ -36,7 +36,7 @@
 					</header>
 					{{# each nextBlogs }}
 					<aside>
-						<a href="/{{ this.url }}" class="next-article" style="background-image: url('/{{ this.url }}/{{ this.image }}');">
+						<a href="/posts/{{ this.url }}" class="next-article" style="background-image: url('/{{ this.url }}/{{ this.image }}');">
 							<h3>{{ this.title }}</h3>
 						</a>
 					</aside>
@@ -44,6 +44,7 @@
 				</div>
 			</section>
 
+			<!--suppress JSUnusedLocalSymbols -->
 			<script type="text/javascript">
 				// Disqus Config
 				// noinspection ES6ConvertVarToLetConst

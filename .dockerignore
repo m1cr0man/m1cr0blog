@@ -19,3 +19,6 @@ storage/
 
 # NPM Packages
 *.tgz
+
+# Other
+*.http
