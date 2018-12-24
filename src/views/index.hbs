@@ -62,8 +62,11 @@
 					{{# each nextBlogs }}
 					<aside>
 						<a href="/posts/{{ this.url }}" class="next-article" style="background-image: url('/posts/{{ this.id }}/{{ this.image }}');">
-							<h3>{{ this.title }}</h3>
-						</a>
+                            <div>
+                                <h3>{{ this.title }}</h3>
+                                <time>{{ this.humanTimestamp }}</time>
+                            </div>
+                        </a>
 					</aside>
 					{{/each}}
 				</div>
@@ -81,4 +84,8 @@
 
 			<!-- Disqus -->
 			<script type="text/javascript" src="/javascripts/disqus.js"></script>
+{{# if isLanding }}
+            <!-- Twitter Widget -->
+            <script id='twitter-wjs' type='text/javascript' src='https://platform.twitter.com/widgets.js'></script>
+{{/if}}
 {{> footer }}

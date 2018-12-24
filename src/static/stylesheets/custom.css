@@ -196,18 +196,25 @@ footer {
 
 .next-article:hover { border: 2px solid #2b8961; }
 
-.next-article h3 {
+.next-article div {
 	width: 100%;
-	margin: 0;
 	padding: 0.1em 0.25em;
 	position: absolute;
 	bottom: 0;
 	box-sizing: border-box;
 	color: #e9e7c7;
-	text-align: center;
+	text-align: left;
 	text-decoration: none;
 	background-color: rgba(43, 137, 97, 0.5);
 }
+
+	.next-article h3 {
+		margin: 0;
+	}
+
+	.next-article time {
+		font-size: 0.85em;
+	}
 
 /* Admin body */
 .padded-body {
