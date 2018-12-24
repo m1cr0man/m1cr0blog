@@ -41,6 +41,39 @@ export class BlogsService extends BaseService<Blog> {
             null)
     }
 
+    // Find blogs before and after
+    // Divide recommendations evenly between new and old
+    findNext(blog: Blog, count: number): Blog[] {
+        const blogs = this.find()
+            .filter((b: Blog) => b.published)
+            .sort((a: Blog, b: Blog) => a.timestamp.valueOf() - b.timestamp.valueOf())
+        const postId = blogs.findIndex((b: Blog) => b.id == blog.id)
+
+        // Reversed so that pop returns newest blogs
+        const newer = blogs.slice(0, postId).reverse()
+        const older = blogs.slice(postId + 1).reverse()
+
+        const nextBlogs: Blog[] = []
+
+        // Do a merge sort-like select of items until we have #count of items
+        for (let i = 0; i < count; i++) {
+            let next: Blog | undefined;
+
+            // Alternate between selecting newer or older blogs
+            // Fall back to selecting the other one if that list is empty
+            if (i % 2 == 0) {
+                next = newer.pop() || older.pop()
+            } else {
+                next = older.pop() || newer.pop()
+            }
+
+            if (next) {
+                nextBlogs.push(next)
+            }
+        }
+        return nextBlogs
+    }
+
     findByUrl(url: string): Blog | null {
         const blogs = this.find()
         return blogs.reduce((last: null | Blog, blog: Blog) =>

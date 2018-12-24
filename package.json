@@ -1,6 +1,6 @@
 {
   "name": "m1cr0blog",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Blog and other microservices",
   "main": "dist/index.js",
   "author": "m1cr0man",

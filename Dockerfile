@@ -1,8 +1,8 @@
 FROM node:alpine
 
 MAINTAINER Lucas Savva "lucas@m1cr0man.com"
-LABEL author "Lucas Savva lucas@m1cr0man.com"
-LABEL repo "https://github.com/m1cr0man/m1cr0blog"
+LABEL author = "Lucas Savva lucas@m1cr0man.com"
+LABEL repo = "https://github.com/m1cr0man/m1cr0blog"
 ARG VERSION=1.0.0
 ARG SHA=unknown
 ARG NODE_ENV=production
@@ -18,8 +18,6 @@ RUN mkdir node_modules && npm install && \
 COPY . /opt/m1cr0blog
 
 RUN mkdir storage && npm run build
-
-VOLUME /opt/m1cr0blog/storage
 
 EXPOSE 3000
 
