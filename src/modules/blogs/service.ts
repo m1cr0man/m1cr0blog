@@ -1,9 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
 import * as path from 'path'
 import { BaseService } from '../../fsrepo/service'
 import { CreateBlogDto } from './dtos'
 import { Blog } from './entity'
 import { BlogsRepository } from './repository'
+import { existsSync } from "fs";
 
 
 @Injectable()
@@ -82,15 +83,17 @@ export class BlogsService extends BaseService<Blog> {
     }
 
     getFilePath(blog: Blog, filename: string): string {
-        return path.resolve(path.join(this.repo.getDir(blog), filename))
+        const fpath = path.resolve(path.join(this.repo.getDir(blog), filename))
+        if (!existsSync(fpath)) throw new HttpException('No such file ' + filename, HttpStatus.NOT_FOUND)
+        return fpath
     }
 
     getFiles(id: string): string[] {
         return this.repo.getFiles(this.findOne(id))
     }
 
-    addFile(id: string, file: Express.Multer.File): void {
-        this.repo.saveFile(this.findOne(id), file)
+    addFile(id: string, file: Express.Multer.File): Promise<string> {
+        return this.repo.saveFile(this.findOne(id), file)
     }
 
     deleteFile(id: string, filename: string): void {

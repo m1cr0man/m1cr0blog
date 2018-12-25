@@ -225,7 +225,7 @@ footer {
 /* Post editor - File Upload Gallery */
 
 #uploader-gallery div {
-	width: 45%;
+	width: 32%;
 	background-color: rgba(200, 200, 200, 0.6);
 	padding: 1em;
 	min-height: 128px;
@@ -236,12 +236,8 @@ footer {
 	word-wrap: break-word;
 }
 
-	#uploader-gallery a {
-		margin-right: 1em;
-		float: left;
-	}
-
 	#uploader-gallery img {
+		max-width: 192px;
 		max-height: 128px;
 	}
 

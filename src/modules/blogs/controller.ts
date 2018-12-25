@@ -102,11 +102,11 @@ export class BlogsController {
     @ApiOperation({title: 'Add File'})
     @UseInterceptors(FileInterceptor('file', {dest: MULTER_TMPDIR}))
     @HttpCode(201)
-    addFile(
+    async addFile(
         @Param('id') id: string,
         @UploadedFile() file: Express.Multer.File // Express.Multer.File is in global namespace
-    ): void {
-        this.service.addFile(id, file)
+    ) {
+        return {filename: await this.service.addFile(id, file)}
     }
 
     @Delete('/:id/files/:filename')

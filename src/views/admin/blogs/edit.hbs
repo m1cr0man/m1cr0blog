@@ -25,42 +25,61 @@
 			<label for="markdown">Body (Markdown)
 				<textarea name="markdown" style="width: 100%;" rows="10">{{ blog.markdown }}</textarea>
 			</label>
+
+			<table class="pure-table pure-table-striped" id="uploader-gallery">
+				<thead>
+				<tr>
+					<th>Image</th>
+					<th>Name</th>
+					<th>Actions</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr class="hidden">
+					<td><a><img src=""></a></td>
+					<td><h3></h3></td>
+					<td>
+						<button type="button" class="remover pure-button pure-button-error">Delete</button>
+						<button type="button" class="appender pure-button pure-button-success">Insert</button>
+						<button type="button" class="primary pure-button pure-button-secondary">Primary</button>
+					</td>
+				</tr>
+				{{#each files}}
+					<tr data-name="{{ this }}">
+						<td>
+							<a href="/posts/{{ ../blog.id }}/{{ this }}">
+								<img src="/posts/{{ ../blog.id }}/{{#replace '.webp' '.h384.webp' }}{{ this }}{{/replace}}">
+							</a>
+						</td>
+						<td><h3>{{ this }}</h3></td>
+						<td>
+							<button type="button" class="remover pure-button pure-button-error"
+									onclick="deleteFile('{{ this }}');">Delete
+							</button>
+							<button type="button" class="appender pure-button pure-button-success"
+									onclick="appendFile('{{ this }}');">Insert
+							</button>
+							<button type="button" class="primary pure-button pure-button-secondary"
+									onclick="setPrimary('{{ this }}');">Primary
+							</button>
+						</td>
+					</tr>
+				{{/each}}
+				</tbody>
+			</table>
 		</fieldset>
+
 	</form>
 </div>
 
-<form id="image-uploader" class="pure-g pure-form pure-form-stacked" action="/api/v1/blogs/{{ blog.id }}/files"
+<form id="image-uploader" class="pure-u-1-4 pure-form pure-form-stacked" action="/api/v1/blogs/{{ blog.id }}/files"
 	  method="POST"
 	  enctype="multipart/form-data">
-	<fieldset class="pure-u-1-4">
+	<fieldset>
 		<h2>Images</h2>
 		<label for="upload-box">Upload Images</label>
 		<input id="upload-box" name="file" type="file" accept="image/*">
 	</fieldset>
-	<div id="uploader-gallery" class="pure-u-3-4">
-		<div class="hidden">
-			<a><img src=""></a>
-			<h3></h3>
-			<button type="button" class="remover pure-button pure-button-error">Delete</button>
-			<button type="button" class="appender pure-button pure-button-success">Insert</button>
-			<button type="button" class="primary pure-button pure-button-secondary">Primary</button>
-		</div>
-		{{#each files}}
-			<div data-name="{{ this }}">
-				<a href="/posts/{{ ../blog.id }}/{{ this }}"><img src="/posts/{{ ../blog.id }}/{{ this }}"></a>
-				<h3>{{ this }}</h3>
-				<button type="button" class="remover pure-button pure-button-error"
-						onclick="deleteFile('{{ this }}');">Delete
-				</button>
-				<button type="button" class="appender pure-button pure-button-success"
-						onclick="appendFile('{{ this }}');">Insert
-				</button>
-				<button type="button" class="primary pure-button pure-button-secondary"
-						onclick="setPrimary('{{ this }}');">Primary
-				</button>
-			</div>
-		{{/each}}
-	</div>
 </form>
 
 <article class="pure-u-1 blog-post">
@@ -92,25 +111,19 @@
 
 	function uploadImage() {
 		$('#image-uploader').ajaxSubmit({
-			beforeSend: function () {
-				var files = $('#image-uploader input')[0].files
-				for (var i = 0; i < files.length; i++) {
-					var file = files[i]
-					var newItem = $('#uploader-gallery div.hidden').clone()
-					newItem.children('a').attr('href', '/posts/{{ blog.id }}/' + file.name)
-					newItem.children('button.remover').attr('onclick', 'deleteFile("' + file.name + '");')
-					newItem.children('button.appender').attr('onclick', 'appendFile("' + file.name + '");')
-					newItem.children('button.primary').attr('onclick', 'setPrimary("' + file.name + '");')
-					newItem.children('h3').html(file.name)
-					newItem.attr('data-name', file.name)
-					newItem.removeClass('hidden')
-					newItem.appendTo('#uploader-gallery')
-				}
-			},
-			success: function () {
-				$('#uploader-gallery a img').each(function () {
-					$(this).attr('src', '/posts/{{ blog.id }}/' + $(this).parent().parent().attr('data-name'))
-				})
+			dataType: 'json',
+			success: function (body) {
+				const filename = body.filename
+				var newItem = $('#uploader-gallery tr.hidden').clone()
+				newItem.children('a').attr('href', '/posts/{{ blog.id }}/' + filename)
+				newItem.find('img').attr('src', '/posts/{{ blog.id }}/' + filename.replace('.webp', '.h384.webp'))
+				newItem.find('button.remover').attr('onclick', 'deleteFile("' + filename + '");')
+				newItem.find('button.appender').attr('onclick', 'appendFile("' + filename + '");')
+				newItem.find('button.primary').attr('onclick', 'setPrimary("' + filename + '");')
+				newItem.find('h3').html(filename)
+				newItem.attr('data-name', filename)
+				newItem.removeClass('hidden')
+				newItem.appendTo('#uploader-gallery')
 			},
 			error: function (err) {
 				console.error(err || 'No response')
@@ -119,7 +132,7 @@
 	}
 
 	function appendFile(file) {
-		var val = '<a href="/posts/{{ blog.id }}/' + file + '"><img src="/posts/{{ blog.id }}/' + file + '"></a>'
+		var val = '<a href="/posts/{{ blog.id }}/' + file + '"><img src="/posts/{{ blog.id }}/' + file.replace('.webp', '.h384.webp') + '"></a>'
 		return window.prompt('Ctrl+C -> Enter', val)
 	}
 

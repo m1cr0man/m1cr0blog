@@ -16,7 +16,11 @@ async function bootstrap(): Promise<void> {
     hbs.registerHelper('unlessEquals', function(arg1, arg2, options) {
         //@ts-ignore
         return (arg1 != arg2) ? options.fn(this) : options.inverse(this);
-    });
+    })
+    hbs.registerHelper('replace', function(needle: string, newstr: string, options) {
+        //@ts-ignore
+        return options.fn(this).replace(needle, newstr)
+    })
 
     // Set up Swagger
     const options = new DocumentBuilder()
