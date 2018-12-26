@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Render, Request } from '@nestjs/common'
 import { ApiOperation, ApiUseTags } from '@nestjs/swagger'
 import { Request as IRequest } from 'express'
-import { TEMPLATE_DATA } from '../../constants'
+import { PageMetadata, TEMPLATE_DATA } from '../../constants'
 import { UploadsPipe } from './pipe'
 import { UploadsService } from './service'
 
@@ -21,21 +21,24 @@ export class UploadsViewController {
     ) {
         const upload = uploads.findOne(id)
         const type = {
-            isImage: !!(upload.mime.indexOf('image') + 1),
-            isVideo: !!(upload.mime.indexOf('video') + 1),
-            isAudio: !!(upload.mime.indexOf('audio') + 1),
-            isText: !!(upload.mime.indexOf('text') + 1)
+            isImage: upload.mime.includes('image'),
+            isVideo: upload.mime.includes('video'),
+            isAudio: upload.mime.includes('audio'),
+            isText: upload.mime.includes('text')
         }
-        const meta = {
-            ...TEMPLATE_DATA.meta,
-            title: upload.filename,
-            url: req.hostname + '/' + req.originalUrl,
-            description: `${upload.filename}: Uploaded on ${upload.date.toLocaleString()}. Size: ${upload.size}`,
-            image: (type.isImage) ? 'download' : null,
-            date: upload.date.toLocaleString()
-        }
-        const downloadPath = `/api/v1/uploads/${userId}/${upload.id}/download`
 
-        return {...TEMPLATE_DATA, upload, meta, type, downloadPath}
+        const downloadPath = `/api/v1/uploads/${userId}/${upload.id}/download`
+        const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`
+
+        const meta: PageMetadata = {
+            ...TEMPLATE_DATA,
+            title: upload.filename,
+            url,
+            description: `${upload.filename}: Uploaded on ${upload.date.toDateString()}. Size: ${upload.size}`,
+            image: (type.isImage) ? url + downloadPath : undefined,
+            date: upload.date.toDateString(),
+        }
+
+        return {...meta, upload, type, downloadPath}
     }
 }

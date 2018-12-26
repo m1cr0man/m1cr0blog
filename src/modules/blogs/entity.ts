@@ -17,6 +17,8 @@ export class Blog extends BaseEntity {
         public markdown: string,
         @BaseEntity.Serialize('image')
         public image?: string,
+        @BaseEntity.Serialize('description')
+        public description?: string,
         @BaseEntity.Serialize('published')
         public published: boolean = false,
         @BaseEntity.Serialize('tags')
@@ -37,8 +39,8 @@ export class Blog extends BaseEntity {
         return this.timestamp.toDateString()
     }
 
-    static fromJSON({id, url, title, timestamp, markdown, published, image, tags}: JSONData<Blog>): Blog {
+    static fromJSON({id, url, title, timestamp, markdown, description, published, image, tags}: JSONData<Blog>): Blog {
         return new Blog(id, url, title, new Date(timestamp),
-            markdown, image, published, tags)
+            markdown, image, description, published, tags)
     }
 }

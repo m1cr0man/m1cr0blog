@@ -1,13 +1,20 @@
-export const TEMPLATE_DATA = {
+export interface PageMetadata {
+    mainClasses?: string,
+    titleSuffix?: string,
+    title?: string,
+    description?: string,
+    date?: string,
+    url?: string,
+    image?: string,
+}
+
+export const TEMPLATE_DATA: PageMetadata = {
     titleSuffix: 'M1cr0man\'s blog',
     title: 'M1cr0man\'s blog',
     mainClasses: '',
-    meta: {
-        url: '/'
-    }
 }
 
-export const TEMPLATE_DATA_ADMIN = {
+export const TEMPLATE_DATA_ADMIN: PageMetadata = {
     ...TEMPLATE_DATA,
     mainClasses: 'pure-g padded-body'
 }
