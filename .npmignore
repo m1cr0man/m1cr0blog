@@ -1,7 +1,7 @@
 node_modules/
 hidden/
 src/
-dist/storage
+storage/
 dist/**/*.map
 
 # Docker

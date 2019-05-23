@@ -1,6 +1,7 @@
 node_modules/
 dist/
 hidden/
+storage/
 
 # Sublime Text
 *.sublime-*
