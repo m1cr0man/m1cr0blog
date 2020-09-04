@@ -38,7 +38,7 @@
     "@types/sharp": "^0.23.1",
     "bcryptjs": "^2.4.3",
     "hbs": "^4.0.1",
-    "marked": "^0.4.0",
+    "marked": "^1.1.1",
     "mime": "^2.4.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.2",
